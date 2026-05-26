@@ -1,0 +1,27 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+
+# Virtualenvs
+.venv/
+.venv-*/
+
+# OS
+.DS_Store
+
+# Editor
+.idea/
+.vscode/
+
+# Personal audio — do NOT commit voice recordings (PII)
+samples/audio/
+
+# Local manifest with absolute paths to personal audio
+samples/manifest.json
+
+# Bench run output beyond the curated final dataset
+results/raw/
+results/*_2026*.json
+results/*_2026*.csv

@@ -1,0 +1,9 @@
+# NAR env — for GigaAM, Parakeet (both transformers and MLX), Moonshine, Sense Voice.
+# Python 3.11 REQUIRED (gigaam pins torch<=2.5.1, which has no Python 3.14 wheels).
+gigaam>=0.1
+transformers>=4.45
+librosa>=0.10
+parakeet-mlx>=0.1
+funasr>=1.3
+psutil>=7
+httpx>=0.28

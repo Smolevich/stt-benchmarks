@@ -1,0 +1,5 @@
+# Main env — for mlx-whisper and cloud bench runners.
+# Python 3.12+ recommended.
+mlx-whisper>=0.4
+httpx>=0.28
+psutil>=7

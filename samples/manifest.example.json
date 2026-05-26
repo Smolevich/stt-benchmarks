@@ -1,0 +1,23 @@
+{
+  "notes": "Smoke-test sample set only. These are Edge TTS voices, not publication-grade human speech samples.",
+  "samples": [
+    {
+      "id": "ru-dmitry",
+      "language": "ru",
+      "path": "experiments/edge-tts/ru-dmitry.mp3",
+      "text": "Привет, это тест Edge TTS. Если ты это слышишь — звук работает, и можно прикручивать как fallback к Groq."
+    },
+    {
+      "id": "ru-svetlana",
+      "language": "ru",
+      "path": "experiments/edge-tts/ru-svetlana.mp3",
+      "text": "Чо кого, чувак, ты на базе? Проверяю как звучит Светлана из Microsoft Neural."
+    },
+    {
+      "id": "en-aria",
+      "language": "en",
+      "path": "experiments/edge-tts/en-aria.mp3",
+      "text": "This is a quick English sanity check. Edge TTS supports over three hundred voices in multiple languages."
+    }
+  ]
+}
