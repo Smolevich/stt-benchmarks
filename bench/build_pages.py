@@ -164,9 +164,17 @@ def language_options(synthetic_rows: list[dict[str, Any]], live_rows: list[dict[
     return "\n".join(options)
 
 
+def audio_set_options(synthetic_rows: list[dict[str, Any]], live_rows: list[dict[str, Any]]) -> str:
+    audio_sets = sorted({str(row["audio_set_id"]) for row in [*live_rows, *synthetic_rows] if row.get("audio_set_id")})
+    options = ['<option value="all">All audio sets</option>']
+    options.extend(f'<option value="{esc(aset)}">{esc(aset)}</option>' for aset in audio_sets)
+    return "\n".join(options)
+
+
 def build_html(synthetic_rows: list[dict[str, Any]], live_rows: list[dict[str, Any]], synthetic_created: str | None, live_created: str | None) -> str:
     generated_at = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
     lang_options = language_options(synthetic_rows, live_rows)
+    aset_options = audio_set_options(synthetic_rows, live_rows)
     return f"""<!doctype html>
 <html lang="en">
 <head>
@@ -275,30 +283,47 @@ def build_html(synthetic_rows: list[dict[str, Any]], live_rows: list[dict[str, A
         <span>Synthetic data: {esc(synthetic_created or "not available")}</span>
         <span>Live data: {esc(live_created or "not available")}</span>
       </div>
-      <label class="controls">
-        <span>Language</span>
-        <select id="language-filter">
-          {lang_options}
-        </select>
-      </label>
+      <div class="controls">
+        <label>
+          <span>Audio Set</span>
+          <select id="audio-set-filter">
+            {aset_options}
+          </select>
+        </label>
+        <label>
+          <span>Language</span>
+          <select id="language-filter">
+            {lang_options}
+          </select>
+        </label>
+      </div>
     </header>
     {table(live_rows, "Live Voice")}
     {table(synthetic_rows, "Synthetic Audio")}
   </main>
   <script>
-    const filter = document.getElementById("language-filter");
+    const langFilter = document.getElementById("language-filter");
+    const audioSetFilter = document.getElementById("audio-set-filter");
     const rows = Array.from(document.querySelectorAll("tbody tr"));
 
-    function applyLanguageFilter() {{
-      const selected = filter.value;
+    function applyFilters() {{
+      const selectedLang = langFilter.value;
+      const selectedAudioSet = audioSetFilter.value;
+      
       for (const row of rows) {{
+        const audioSet = row.cells[0]?.textContent.trim();
         const language = row.cells[1]?.textContent.trim();
-        row.hidden = selected !== "all" && language !== selected;
+        
+        const matchLang = selectedLang === "all" || language === selectedLang;
+        const matchAudioSet = selectedAudioSet === "all" || audioSet === selectedAudioSet;
+        
+        row.hidden = !(matchLang && matchAudioSet);
       }}
     }}
 
-    filter.addEventListener("change", applyLanguageFilter);
-    applyLanguageFilter();
+    langFilter.addEventListener("change", applyFilters);
+    audioSetFilter.addEventListener("change", applyFilters);
+    applyFilters();
   </script>
 </body>
 </html>
