@@ -143,8 +143,16 @@ def table(rows: list[dict[str, Any]], title: str) -> str:
 """
 
 
+def language_options(synthetic_rows: list[dict[str, Any]], live_rows: list[dict[str, Any]]) -> str:
+    languages = sorted({str(row["language"]) for row in [*live_rows, *synthetic_rows] if row.get("language")})
+    options = ['<option value="all">All languages</option>']
+    options.extend(f'<option value="{esc(language)}">{esc(language.upper())}</option>' for language in languages)
+    return "\n".join(options)
+
+
 def build_html(synthetic_rows: list[dict[str, Any]], live_rows: list[dict[str, Any]], synthetic_created: str | None, live_created: str | None) -> str:
     generated_at = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
+    lang_options = language_options(synthetic_rows, live_rows)
     return f"""<!doctype html>
 <html lang="en">
 <head>
@@ -200,6 +208,23 @@ def build_html(synthetic_rows: list[dict[str, Any]], live_rows: list[dict[str, A
       color: var(--muted);
       font-size: 14px;
     }}
+    .controls {{
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 22px 0 8px;
+      color: var(--muted);
+      font-size: 14px;
+    }}
+    select {{
+      height: 34px;
+      padding: 0 34px 0 10px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: white;
+      color: var(--text);
+      font: inherit;
+    }}
     .table-wrap {{
       overflow-x: auto;
       border: 1px solid var(--line);
@@ -236,10 +261,31 @@ def build_html(synthetic_rows: list[dict[str, Any]], live_rows: list[dict[str, A
         <span>Synthetic data: {esc(synthetic_created or "not available")}</span>
         <span>Live data: {esc(live_created or "not available")}</span>
       </div>
+      <label class="controls">
+        <span>Language</span>
+        <select id="language-filter">
+          {lang_options}
+        </select>
+      </label>
     </header>
     {table(live_rows, "Live Voice")}
     {table(synthetic_rows, "Synthetic Audio")}
   </main>
+  <script>
+    const filter = document.getElementById("language-filter");
+    const rows = Array.from(document.querySelectorAll("tbody tr"));
+
+    function applyLanguageFilter() {{
+      const selected = filter.value;
+      for (const row of rows) {{
+        const language = row.cells[1]?.textContent.trim();
+        row.hidden = selected !== "all" && language !== selected;
+      }}
+    }}
+
+    filter.addEventListener("change", applyLanguageFilter);
+    applyLanguageFilter();
+  </script>
 </body>
 </html>
 """
