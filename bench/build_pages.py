@@ -121,14 +121,14 @@ def table(rows: list[dict[str, Any]], title: str) -> str:
         f"<td>{esc(row['audio_set_id'])}</td>"
         f"<td>{esc(row['language'])}</td>"
         f"<td>{esc(row['model_id'])}</td>"
-        f"<td>{esc(row.get('tts_provider') or '—')}</td>"
-        f"<td>{esc(row.get('tts_model') or '—')}</td>"
-        f"<td>{esc(row.get('tts_voice') or '—')}</td>"
-        f"<td>{fmt(row.get('clean_wer_pct'), '%')}</td>"
-        f"<td>{fmt(row.get('median_wer_pct'), '%')}</td>"
-        f"<td>{fmt(row.get('median_cer_pct'), '%')}</td>"
-        f"<td>{fmt(row.get('median_latency_per_10s'), ' s')}</td>"
-        f"<td>{fmt(row.get('peak_rss_mb'))}</td>"
+        f"<td class='col-acc'>{esc(row.get('tts_provider') or '—')}</td>"
+        f"<td class='col-acc'>{esc(row.get('tts_model') or '—')}</td>"
+        f"<td class='col-acc'>{esc(row.get('tts_voice') or '—')}</td>"
+        f"<td class='col-acc'>{fmt(row.get('clean_wer_pct'), '%')}</td>"
+        f"<td class='col-acc'>{fmt(row.get('median_wer_pct'), '%')}</td>"
+        f"<td class='col-acc'>{fmt(row.get('median_cer_pct'), '%')}</td>"
+        f"<td class='col-res'>{fmt(row.get('median_latency_per_10s'), ' s')}</td>"
+        f"<td class='col-res'>{fmt(row.get('peak_rss_mb'))}</td>"
         f"<td>{esc(row['run_count'])}</td>"
         "</tr>"
         for row in rows
@@ -143,14 +143,14 @@ def table(rows: list[dict[str, Any]], title: str) -> str:
           <th>Audio set</th>
           <th>Lang</th>
           <th>STT model</th>
-          <th>TTS provider</th>
-          <th>TTS model</th>
-          <th>Voice</th>
-          <th>WER clean</th>
-          <th>WER full</th>
-          <th>CER</th>
-          <th>Latency / 10s</th>
-          <th>Peak RAM (MB)</th>
+          <th class="col-acc">TTS provider</th>
+          <th class="col-acc">TTS model</th>
+          <th class="col-acc">Voice</th>
+          <th class="col-acc">WER clean</th>
+          <th class="col-acc">WER full</th>
+          <th class="col-acc">CER</th>
+          <th class="col-res">Latency / 10s</th>
+          <th class="col-res">Peak RAM (MB)</th>
           <th>Runs</th>
         </tr>
       </thead>
@@ -275,6 +275,8 @@ def build_html(synthetic_rows: list[dict[str, Any]], live_rows: list[dict[str, A
     }}
     tbody tr:last-child td {{ border-bottom: 0; }}
     a {{ color: var(--accent); }}
+    body[data-view="accuracy"] .col-res {{ display: none; }}
+    body[data-view="resources"] .col-acc {{ display: none; }}
   </style>
 </head>
 <body>
@@ -288,6 +290,14 @@ def build_html(synthetic_rows: list[dict[str, Any]], live_rows: list[dict[str, A
         <span>Live data: {esc(live_created or "not available")}</span>
       </div>
       <div class="controls">
+        <label>
+          <span>View</span>
+          <select id="view-filter">
+            <option value="accuracy">Accuracy (WER/CER)</option>
+            <option value="resources">Resources (RAM/Latency)</option>
+            <option value="all">All columns</option>
+          </select>
+        </label>
         <label>
           <span>Audio Set</span>
           <select id="audio-set-filter">
@@ -328,6 +338,13 @@ def build_html(synthetic_rows: list[dict[str, Any]], live_rows: list[dict[str, A
     langFilter.addEventListener("change", applyFilters);
     audioSetFilter.addEventListener("change", applyFilters);
     applyFilters();
+
+    const viewFilter = document.getElementById("view-filter");
+    function applyView() {{
+      document.body.setAttribute("data-view", viewFilter.value);
+    }}
+    viewFilter.addEventListener("change", applyView);
+    applyView();
   </script>
 </body>
 </html>
