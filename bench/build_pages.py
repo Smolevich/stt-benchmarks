@@ -76,6 +76,7 @@ def summarize(runs: list[dict[str, Any]]) -> list[dict[str, Any]]:
         clean_group = [row for row in group if is_clean_sample(row)]
         first = group[0]
         latencies = [float(row["latency_per_10s"]) for row in group if row.get("latency_per_10s") is not None]
+        peak_rss = [float(row["peak_rss_mb"]) for row in group if row.get("peak_rss_mb") is not None]
         rows.append(
             {
                 "audio_set_id": audio_set,
@@ -92,6 +93,7 @@ def summarize(runs: list[dict[str, Any]]) -> list[dict[str, Any]]:
                 "median_wer_pct": median([float(row["wer_pct"]) for row in group]),
                 "clean_wer_pct": median([float(row["wer_pct"]) for row in clean_group]),
                 "median_cer_pct": median([float(row["cer_pct"]) for row in group]),
+                "peak_rss_mb": max(peak_rss) if peak_rss else None,
             }
         )
     return sorted(rows, key=lambda row: (row["audio_set_id"], row["language"], row["clean_wer_pct"] or 999, row["median_wer_pct"] or 999))
@@ -126,6 +128,7 @@ def table(rows: list[dict[str, Any]], title: str) -> str:
         f"<td>{fmt(row.get('median_wer_pct'), '%')}</td>"
         f"<td>{fmt(row.get('median_cer_pct'), '%')}</td>"
         f"<td>{fmt(row.get('median_latency_per_10s'), ' s')}</td>"
+        f"<td>{fmt(row.get('peak_rss_mb'))}</td>"
         f"<td>{esc(row['run_count'])}</td>"
         "</tr>"
         for row in rows
@@ -147,6 +150,7 @@ def table(rows: list[dict[str, Any]], title: str) -> str:
           <th>WER full</th>
           <th>CER</th>
           <th>Latency / 10s</th>
+          <th>Peak RAM (MB)</th>
           <th>Runs</th>
         </tr>
       </thead>
