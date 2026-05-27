@@ -433,6 +433,12 @@ def build_runner(spec: ModelSpec) -> Callable[[str, str], str]:
         pipeline = StreamingCTCPipeline.from_hugging_face()
 
         def transcribe(path: str, language: str) -> str:
+            # Fallback to .wav if the original is an unsupported format (like .m4a)
+            if path.endswith(".m4a") or path.endswith(".mp3"):
+                wav_path = path.rsplit(".", 1)[0] + ".wav"
+                import os
+                if os.path.exists(wav_path):
+                    path = wav_path
             audio = read_audio(path)
             result = pipeline.forward_offline(audio)
             if isinstance(result, list):
