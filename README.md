@@ -40,7 +40,7 @@ Live audio files are **not included** — they're personal voice recordings. TTS
 
 WER clean excludes `*-04-digits` and `*-07-names` — those two samples push WER to 70-95% across all models because Whisper normalizes "twenty" → "20" and doesn't know identifiers like `smolevich_voice_bot`. The artifact is real but masks model differences.
 
-### Russian — 10 models tested
+### Russian — 11 models tested
 
 | # | Model | Where | Latency / 10s | WER | CER |
 |---|---|---|---|---|---|
@@ -53,7 +53,8 @@ WER clean excludes `*-04-digits` and `*-07-names` — those two samples push WER
 | 7 | Parakeet TDT v3 (mlx) | local | 0.22 s | 21.0% | 15.2% |
 | 8 | ElevenLabs Scribe v1 (legacy) | cloud | 0.93 s | 23.1% | 22.0% |
 | 9 | mlx-whisper-large-v3 | local | 1.34 s | 24.3% | 16.3% |
-| 10 | mlx-whisper-small | local | 0.52 s | 28.8% | 17.6% |
+| 10 | T-one | local | 3.16 s | 28.5% | 20.8% |
+| 11 | mlx-whisper-small | local | 0.52 s | 28.8% | 17.6% |
 
 ### English — 10 models tested
 

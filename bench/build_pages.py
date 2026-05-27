@@ -295,7 +295,6 @@ def build_html(synthetic_rows: list[dict[str, Any]], live_rows: list[dict[str, A
           <select id="view-filter">
             <option value="accuracy">Accuracy (WER/CER)</option>
             <option value="resources">Resources (RAM/Latency)</option>
-            <option value="all">All columns</option>
           </select>
         </label>
         <label>
