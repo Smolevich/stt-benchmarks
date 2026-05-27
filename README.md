@@ -141,7 +141,7 @@ GROQ_API_KEY=... ELEVENLABS_API_KEY=... python bench/stt_landscape_bench.py \
 # NAR models (use venv with torch 2.5)
 .venv-nar/bin/python bench/stt_landscape_bench.py \
   --samples samples/manifest.json \
-  --models gigaam-v2-ctc,gigaam-v2-rnnt,parakeet-tdt-0.6b-v3-mlx,parakeet-tdt-0.6b-v3,sensevoice-small,transformers-moonshine-base \
+  --models gigaam-v2-ctc,gigaam-v2-rnnt,parakeet-tdt-0.6b-v3-mlx,parakeet-tdt-0.6b-v3,sensevoice-small,transformers-moonshine-base,t-one \
   --warmup 1 --runs 3
 ```
 
@@ -170,6 +170,7 @@ Produces `results/consolidated_<timestamp>.json` (all runs deduped) and `consoli
 - **Small sample size.** 10 sample × 3 runs per language. Confidence intervals are wide — treat differences smaller than ~2 points WER as noise.
 - **Synthetic data has TTS bias.** TTS audio is cleaner and acoustically simpler than real speech. If a TTS provider and an STT provider share training data, modeling assumptions, or audio preprocessing pipelines, synthetic audio can make that provider's STT look artificially strong — vendor self-bias. ElevenLabs Scribe evaluated on ElevenLabs-generated audio is a direct example. Synthetic results are treated as reproducibility/control evidence only; **live human voice remains the primary benchmark.** See [docs/methodology.md](docs/methodology.md) for details.
 - **No number-word normalization.** Whisper-family models normalize "двадцать" → "20", but our reference text keeps "двадцати". On digit-heavy samples this inflates WER artificially by 5-15 points. We mitigated by reporting "WER clean" without those samples; for "WER full" see `results/consolidated.json`.
+- **T-one is out-of-domain on wideband audio.** T-one is a streaming CTC model explicitly trained for telephony (8 kHz narrowband). Our pipeline feeds it 48 kHz `.m4a` files (which its internal `miniaudio` decoder downsamples to 8 kHz, or fails to decode entirely depending on format). It produces poor WER on this benchmark because the clean iPhone audio is completely out of its training distribution. This is a deliberate inclusion to show domain mismatch, not a model bug.
 - **RAM measurement is unreliable for mlx-whisper.** mlx uses memory-mapped weights; our peak RSS sampler only sees anonymous pages. Real per-model RAM is likely 1.5-2× higher than reported.
 - **NAR models other than Parakeet run on PyTorch CPU without MPS.** GigaAM, Moonshine, Sense Voice — none have an MLX-native port we used here. Their latency numbers reflect "unaccelerated PyTorch on M4 Pro", not "best achievable Apple Silicon latency".
 - **Cloud latency includes network round-trip from Hetzner Frankfurt** for ElevenLabs and Groq. Different geos will see different cloud latency.
