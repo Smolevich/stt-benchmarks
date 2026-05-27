@@ -23,14 +23,18 @@ samples/
   recording-script.md         # what to record — 20 scenarios with full text
   manifest.template.json      # reference text for 20 samples, paths to fill in
   manifest.example.json       # example manifest with edge-tts smoke-test samples
+  manifest_synthetic.json     # committed TTS-generated RU + EN synthetic set
+  manifest_silero_*.json      # committed independent RU synthetic control sets
 results/
   consolidated.json           # all runs deduplicated, with transcripts
   summary.csv                 # medians by (model, language)
+  synthetic_consolidated.json # latest curated synthetic benchmark snapshot
+  synthetic_summary.csv       # latest curated synthetic summary
 plots/
   ar_vs_nar.png               # generated illustration of AR vs NAR concept
 ```
 
-Audio files are **not included** — they're personal voice recordings. To reproduce on your own voice, see "Reproducing the bench" below.
+Live audio files are **not included** — they're personal voice recordings. TTS-generated synthetic audio is committed separately under `samples/synthetic/` because it contains no personal voice data. To reproduce the primary benchmark on your own voice, see "Reproducing the bench" below.
 
 ## Final numbers (8 sample × 3 runs, WER clean)
 
@@ -152,7 +156,8 @@ Produces `results/consolidated_<timestamp>.json` (all runs deduped) and `consoli
 ## Methodology
 
 - **Hardware**: Mac mini M4 Pro, 64 GB RAM, no discrete GPU.
-- **Audio**: 20 voice memos recorded on iPhone (one speaker, m4a, 48 kHz mono, ~10-25 s each).
+- **Primary audio**: 20 voice memos recorded on iPhone (one speaker, m4a, 48 kHz mono, ~10-25 s each). **This is the most unbiased dataset** — real microphone, natural prosody, genuine speaker habits. Live voice numbers are the primary ranking signal.
+- **Synthetic audio**: secondary TTS-generated control sets (`elevenlabs_rachel_mixed` via ElevenLabs Rachel, and Silero RU voices). Added for reproducibility (live audio is not committed — it's personal voice / PII) and to illustrate how TTS-generated audio can shift model rankings due to clean audio characteristics and potential vendor self-bias. **Do not treat synthetic results as the final benchmark.** See [docs/methodology.md](docs/methodology.md) for a detailed explanation.
 - **Scenarios**: clean room, fast speech, whisper, street noise, numbers spoken as words, proper names/identifiers, code-switching RU↔EN, podcast pace, short commands, long sentence with subordinate clauses.
 - **Metric**: WER and CER via Levenshtein distance on lowercased, punctuation-stripped text. No advanced normalization (numerals vs words, etc.) — see "Limitations".
 - **Reps**: 1 warmup + 3 measured runs per (model, sample), report medians.
@@ -163,15 +168,24 @@ Produces `results/consolidated_<timestamp>.json` (all runs deduped) and `consoli
 
 - **Single speaker, single recording device.** Results are biased toward the bench operator's voice and an iPhone's mic. Other speakers, accents, and devices will give different numbers.
 - **Small sample size.** 10 sample × 3 runs per language. Confidence intervals are wide — treat differences smaller than ~2 points WER as noise.
+- **Synthetic data has TTS bias.** TTS audio is cleaner and acoustically simpler than real speech. If a TTS provider and an STT provider share training data, modeling assumptions, or audio preprocessing pipelines, synthetic audio can make that provider's STT look artificially strong — vendor self-bias. ElevenLabs Scribe evaluated on ElevenLabs-generated audio is a direct example. Synthetic results are treated as reproducibility/control evidence only; **live human voice remains the primary benchmark.** See [docs/methodology.md](docs/methodology.md) for details.
 - **No number-word normalization.** Whisper-family models normalize "двадцать" → "20", but our reference text keeps "двадцати". On digit-heavy samples this inflates WER artificially by 5-15 points. We mitigated by reporting "WER clean" without those samples; for "WER full" see `results/consolidated.json`.
 - **RAM measurement is unreliable for mlx-whisper.** mlx uses memory-mapped weights; our peak RSS sampler only sees anonymous pages. Real per-model RAM is likely 1.5-2× higher than reported.
 - **NAR models other than Parakeet run on PyTorch CPU without MPS.** GigaAM, Moonshine, Sense Voice — none have an MLX-native port we used here. Their latency numbers reflect "unaccelerated PyTorch on M4 Pro", not "best achievable Apple Silicon latency".
 - **Cloud latency includes network round-trip from Hetzner Frankfurt** for ElevenLabs and Groq. Different geos will see different cloud latency.
 
+## Detailed docs
+
+- [docs/methodology.md](docs/methodology.md) — why live voice is the most unbiased source, what synthetic is for, and how TTS-induced bias can distort rankings.
+- [docs/commands.md](docs/commands.md) — bench / consolidate / plot invocations.
+- [docs/environments.md](docs/environments.md) — two venvs (Python 3.12 vs 3.11) and which models live where.
+- [docs/architecture.md](docs/architecture.md) — runner registry, caches, latency metric, how to add a model.
+
 ## Files in `results/`
 
 - `consolidated.json` — every (model, sample, run) row deduplicated by latest timestamp. Contains both reference and hypothesis text — you can recompute WER yourself with `wer_eval.py` to verify our numbers.
 - `summary.csv` — medians by (model, language). Drop into a spreadsheet.
+- `synthetic_consolidated.json` / `synthetic_summary.csv` — latest committed synthetic snapshot used by the GitHub Pages report. Timestamped `results/stt_landscape_2026*.json/csv` files are working outputs and stay ignored.
 
 ## License
 
