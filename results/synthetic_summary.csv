@@ -1,0 +1,43 @@
+model_id,runner,arch,language,audio_set_id,sample_count,run_count,median_elapsed_s,median_latency_per_10s,median_wer_pct,median_cer_pct,peak_rss_mb
+elevenlabs-scribe-v1,elevenlabs,AR,all,elevenlabs_rachel_mixed,20,20,1.4959,1.1137,9.42,10.59,48.8
+elevenlabs-scribe-v1,elevenlabs,AR,en,elevenlabs_rachel_mixed,10,10,1.3861,1.0747,8.63,11.1,48.8
+elevenlabs-scribe-v1,elevenlabs,AR,ru,elevenlabs_rachel_mixed,10,10,1.574,1.2455,9.55,7.75,48.0
+elevenlabs-scribe-v1-experimental,elevenlabs,AR,all,elevenlabs_rachel_mixed,20,20,1.2281,0.9975,4.2,4.17,49.2
+elevenlabs-scribe-v1-experimental,elevenlabs,AR,en,elevenlabs_rachel_mixed,10,10,1.1877,0.979,0.0,2.03,49.2
+elevenlabs-scribe-v1-experimental,elevenlabs,AR,ru,elevenlabs_rachel_mixed,10,10,1.3017,1.0804,7.41,5.3,49.1
+gigaam-v2-ctc,gigaam,NAR (CTC),all,elevenlabs_rachel_mixed,20,20,0.7266,0.512,85.0,71.77,2545.1
+gigaam-v2-ctc,gigaam,NAR (CTC),en,elevenlabs_rachel_mixed,10,10,0.7266,0.5318,100.0,94.24,2545.1
+gigaam-v2-ctc,gigaam,NAR (CTC),ru,elevenlabs_rachel_mixed,10,10,0.6986,0.4945,17.07,18.37,2544.2
+gigaam-v2-rnnt,gigaam,NAR (RNN-T),all,elevenlabs_rachel_mixed,20,20,0.7524,0.5607,85.0,75.61,3717.7
+gigaam-v2-rnnt,gigaam,NAR (RNN-T),en,elevenlabs_rachel_mixed,10,10,0.787,0.5688,100.0,100.0,3717.7
+gigaam-v2-rnnt,gigaam,NAR (RNN-T),ru,elevenlabs_rachel_mixed,10,10,0.7033,0.5607,16.52,18.37,3717.4
+groq-whisper-large-v3-turbo,groq,AR,all,elevenlabs_rachel_mixed,20,20,0.4839,0.3839,9.84,5.62,48.6
+groq-whisper-large-v3-turbo,groq,AR,en,elevenlabs_rachel_mixed,10,10,0.4721,0.361,7.94,2.46,48.6
+groq-whisper-large-v3-turbo,groq,AR,ru,elevenlabs_rachel_mixed,10,10,0.5131,0.3954,11.96,8.5,47.9
+mlx-whisper-large-v3,mlx_whisper,AR,all,elevenlabs_rachel_mixed,20,20,1.5549,1.2746,11.96,5.36,4670.1
+mlx-whisper-large-v3,mlx_whisper,AR,en,elevenlabs_rachel_mixed,10,10,1.4852,1.1463,4.91,2.14,1073.6
+mlx-whisper-large-v3,mlx_whisper,AR,ru,elevenlabs_rachel_mixed,10,10,1.6044,1.3243,14.84,8.1,4670.1
+mlx-whisper-large-v3-turbo,mlx_whisper,AR,all,elevenlabs_rachel_mixed,20,20,0.789,0.6538,9.84,7.08,2422.3
+mlx-whisper-large-v3-turbo,mlx_whisper,AR,en,elevenlabs_rachel_mixed,10,10,0.7666,0.5752,7.94,3.18,2422.3
+mlx-whisper-large-v3-turbo,mlx_whisper,AR,ru,elevenlabs_rachel_mixed,10,10,0.8354,0.74,16.26,8.92,2414.7
+mlx-whisper-medium,mlx_whisper,AR,all,elevenlabs_rachel_mixed,20,20,1.0033,0.773,9.37,5.75,1976.5
+mlx-whisper-medium,mlx_whisper,AR,en,elevenlabs_rachel_mixed,10,10,0.9604,0.7344,6.44,2.55,1976.5
+mlx-whisper-medium,mlx_whisper,AR,ru,elevenlabs_rachel_mixed,10,10,1.0643,0.8618,13.94,9.39,1970.0
+mlx-whisper-small,mlx_whisper,AR,all,elevenlabs_rachel_mixed,20,20,0.4732,0.3681,11.43,8.79,901.7
+mlx-whisper-small,mlx_whisper,AR,en,elevenlabs_rachel_mixed,10,10,0.4264,0.3501,6.44,3.44,901.7
+mlx-whisper-small,mlx_whisper,AR,ru,elevenlabs_rachel_mixed,10,10,0.5221,0.4306,14.84,12.61,894.5
+parakeet-tdt-0.6b-v3,transformers,NAR (TDT),all,elevenlabs_rachel_mixed,20,20,1.2279,0.9551,11.48,6.42,1138.1
+parakeet-tdt-0.6b-v3,transformers,NAR (TDT),en,elevenlabs_rachel_mixed,10,10,1.2279,0.9251,4.91,3.21,1138.1
+parakeet-tdt-0.6b-v3,transformers,NAR (TDT),ru,elevenlabs_rachel_mixed,10,10,1.2051,1.0145,16.52,7.68,825.4
+parakeet-tdt-0.6b-v3-mlx,parakeet_mlx,NAR (TDT),all,elevenlabs_rachel_mixed,20,20,0.3708,0.3019,11.48,7.47,927.6
+parakeet-tdt-0.6b-v3-mlx,parakeet_mlx,NAR (TDT),en,elevenlabs_rachel_mixed,10,10,0.3524,0.2895,4.91,3.13,927.6
+parakeet-tdt-0.6b-v3-mlx,parakeet_mlx,NAR (TDT),ru,elevenlabs_rachel_mixed,10,10,0.4,0.3228,16.52,11.32,926.4
+sensevoice-small,funasr,NAR (CTC),all,elevenlabs_rachel_mixed,20,20,0.5546,0.4314,75.36,46.42,3659.5
+sensevoice-small,funasr,NAR (CTC),en,elevenlabs_rachel_mixed,10,10,0.5546,0.4414,9.88,7.54,3659.5
+sensevoice-small,funasr,NAR (CTC),ru,elevenlabs_rachel_mixed,10,10,0.5509,0.4196,100.0,99.3,3659.1
+t-one,tone,NAR (CTC),all,elevenlabs_rachel_mixed,20,20,1.1062,0.7843,76.88,73.16,5045.9
+t-one,tone,NAR (CTC),en,elevenlabs_rachel_mixed,10,10,1.1136,0.7825,100.0,99.57,5045.9
+t-one,tone,NAR (CTC),ru,elevenlabs_rachel_mixed,10,10,1.1062,0.7843,22.23,18.37,5045.9
+transformers-moonshine-base,transformers,NAR,all,elevenlabs_rachel_mixed,20,20,3.5602,2.8264,79.29,49.34,1535.0
+transformers-moonshine-base,transformers,NAR,en,elevenlabs_rachel_mixed,10,10,3.2741,2.5719,6.44,3.38,1030.1
+transformers-moonshine-base,transformers,NAR,ru,elevenlabs_rachel_mixed,10,10,10.0081,6.9369,224.29,182.31,1535.0

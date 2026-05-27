@@ -1,0 +1,22 @@
+{
+  "notes": "Telephony-resampled (8 kHz mono μ-law, 300–3400 Hz band-pass) versions of samples/synthetic/elevenlabs_rachel_mixed/ru-*.mp3. Used for fair evaluation of T-one (telephony-trained). Reference texts identical to manifest_synthetic.json.",
+  "audio_set_id": "elevenlabs_rachel_mixed_8k",
+  "sample_defaults": {
+    "tts_provider": "elevenlabs",
+    "tts_voice": "rachel",
+    "condition": "telephony_8k",
+    "sample_rate_hz": 8000
+  },
+  "samples": [
+    {"id": "ru-01-clean",   "language": "ru", "path": "samples/synthetic/elevenlabs_rachel_mixed_8k/ru-01-clean.wav",   "text": "Сегодня прогоняю бенч на двадцати голосовых, сравниваю Whisper, Parakeet и GigaAM. Хочу понять, кто быстрее на ноуте без видеокарты и где архитектура решает больше, чем железо."},
+    {"id": "ru-02-fast",    "language": "ru", "path": "samples/synthetic/elevenlabs_rachel_mixed_8k/ru-02-fast.wav",    "text": "Слушай, я тут думаю, может быть, ну вот этот бот мой, он в принципе работает, но короче надо посмотреть, может Parakeet прикрутить, потому что Groq, ну, в целом ок, но русский у него такой себе."},
+    {"id": "ru-03-mix",     "language": "ru", "path": "samples/synthetic/elevenlabs_rachel_mixed_8k/ru-03-mix.wav",     "text": "Вчера деплоил новую версию через GitHub Actions, и у меня pipeline упал на step build, потому что Node восемнадцатой не было в раннере. Пришлось матрицу поправить."},
+    {"id": "ru-04-digits",  "language": "ru", "path": "samples/synthetic/elevenlabs_rachel_mixed_8k/ru-04-digits.wav",  "text": "Сервер двести один точка сто два точка тридцать восемь точка семь, порт восемьдесят три. Конфиг лежит в slash opt slash voice dash ai slash bot slash dot env, проверь GROQ_API_KEY."},
+    {"id": "ru-05-long",    "language": "ru", "path": "samples/synthetic/elevenlabs_rachel_mixed_8k/ru-05-long.wav",    "text": "Если посмотреть на разницу между autoregressive и non-autoregressive моделями, особенно в контексте того, как они декодируют аудио, становится понятно, почему Parakeet, который работает по фреймам, на процессоре может обогнать Whisper, который генерирует токены последовательно."},
+    {"id": "ru-06-whisper", "language": "ru", "path": "samples/synthetic/elevenlabs_rachel_mixed_8k/ru-06-whisper.wav", "text": "Сейчас ночь, дома все спят, и я тестирую как бот распознаёт тихую речь, говорю практически шёпотом, посмотрим что выдаст модель."},
+    {"id": "ru-07-names",   "language": "ru", "path": "samples/synthetic/elevenlabs_rachel_mixed_8k/ru-07-names.wav",   "text": "Стас Шупилкин, Telegram бот smolevich_voice_bot, репозиторий voice-ai, бенч скрипт stt landscape bench точка пай. Запускается через mlx_whisper, NeMo, transformers."},
+    {"id": "ru-08-street",  "language": "ru", "path": "samples/synthetic/elevenlabs_rachel_mixed_8k/ru-08-street.wav",  "text": "Вышел погулять, проверяю как бот справляется с уличным шумом, ветром и проезжающими машинами. Думаю, это самый честный тест для real-world кейса."},
+    {"id": "ru-09-short",   "language": "ru", "path": "samples/synthetic/elevenlabs_rachel_mixed_8k/ru-09-short.wav",   "text": "Перезагрузи сервер. Сначала останови бота, потом редис, потом telegram bot api. Подожди пять секунд, запускай обратно."},
+    {"id": "ru-10-podcast", "language": "ru", "path": "samples/synthetic/elevenlabs_rachel_mixed_8k/ru-10-podcast.wav", "text": "Когда мы выбираем STT стек, первое что я делаю — смотрю не на бенчмарки, а на свою задачу. Real-time или batch? Один язык или много? Privacy критична или нет? От этих трёх вопросов всё дальше."}
+  ]
+}

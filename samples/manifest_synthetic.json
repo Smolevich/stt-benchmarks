@@ -1,0 +1,171 @@
+{
+  "notes": "Synthetic STT bench samples. TTS via ElevenLabs (flash_v2_5 + v3 with audio tags). Ambient via /v1/sound-generation. Voice: Rachel (multilingual). Texts copied from manifest.template.json.",
+  "audio_set_id": "elevenlabs_rachel_mixed",
+  "sample_defaults": {
+    "tts_provider": "elevenlabs",
+    "tts_voice": "rachel",
+    "condition": "mixed"
+  },
+  "samples": [
+    {
+      "id": "ru-01-clean",
+      "language": "ru",
+      "path": "samples/synthetic/elevenlabs_rachel_mixed/ru-01-clean.mp3",
+      "text": "Сегодня прогоняю бенч на двадцати голосовых, сравниваю Whisper, Parakeet и GigaAM. Хочу понять, кто быстрее на ноуте без видеокарты и где архитектура решает больше, чем железо.",
+      "_tts_model": "eleven_flash_v2_5",
+      "_ambient": false
+    },
+    {
+      "id": "ru-02-fast",
+      "language": "ru",
+      "path": "samples/synthetic/elevenlabs_rachel_mixed/ru-02-fast.mp3",
+      "text": "Слушай, я тут думаю, может быть, ну вот этот бот мой, он в принципе работает, но короче надо посмотреть, может Parakeet прикрутить, потому что Groq, ну, в целом ок, но русский у него такой себе.",
+      "_tts_model": "eleven_v3",
+      "_ambient": false
+    },
+    {
+      "id": "ru-03-mix",
+      "language": "ru",
+      "path": "samples/synthetic/elevenlabs_rachel_mixed/ru-03-mix.mp3",
+      "text": "Вчера деплоил новую версию через GitHub Actions, и у меня pipeline упал на step build, потому что Node восемнадцатой не было в раннере. Пришлось матрицу поправить.",
+      "_tts_model": "eleven_flash_v2_5",
+      "_ambient": false
+    },
+    {
+      "id": "ru-04-digits",
+      "language": "ru",
+      "path": "samples/synthetic/elevenlabs_rachel_mixed/ru-04-digits.mp3",
+      "text": "Сервер двести один точка сто два точка тридцать восемь точка семь, порт восемьдесят три. Конфиг лежит в slash opt slash voice dash ai slash bot slash dot env, проверь GROQ_API_KEY.",
+      "_tts_model": "eleven_flash_v2_5",
+      "_ambient": false
+    },
+    {
+      "id": "ru-05-long",
+      "language": "ru",
+      "path": "samples/synthetic/elevenlabs_rachel_mixed/ru-05-long.mp3",
+      "text": "Если посмотреть на разницу между autoregressive и non-autoregressive моделями, особенно в контексте того, как они декодируют аудио, становится понятно, почему Parakeet, который работает по фреймам, на процессоре может обогнать Whisper, который генерирует токены последовательно.",
+      "_tts_model": "eleven_flash_v2_5",
+      "_ambient": false
+    },
+    {
+      "id": "ru-06-whisper",
+      "language": "ru",
+      "path": "samples/synthetic/elevenlabs_rachel_mixed/ru-06-whisper.mp3",
+      "text": "Сейчас ночь, дома все спят, и я тестирую как бот распознаёт тихую речь, говорю практически шёпотом, посмотрим что выдаст модель.",
+      "_tts_model": "eleven_v3",
+      "_ambient": false
+    },
+    {
+      "id": "ru-07-names",
+      "language": "ru",
+      "path": "samples/synthetic/elevenlabs_rachel_mixed/ru-07-names.mp3",
+      "text": "Стас Шупилкин, Telegram бот smolevich_voice_bot, репозиторий voice-ai, бенч скрипт stt landscape bench точка пай. Запускается через mlx_whisper, NeMo, transformers.",
+      "_tts_model": "eleven_flash_v2_5",
+      "_ambient": false
+    },
+    {
+      "id": "ru-08-street",
+      "language": "ru",
+      "path": "samples/synthetic/elevenlabs_rachel_mixed/ru-08-street.mp3",
+      "text": "Вышел погулять, проверяю как бот справляется с уличным шумом, ветром и проезжающими машинами. Думаю, это самый честный тест для real-world кейса.",
+      "_tts_model": "eleven_flash_v2_5",
+      "_ambient": true
+    },
+    {
+      "id": "ru-09-short",
+      "language": "ru",
+      "path": "samples/synthetic/elevenlabs_rachel_mixed/ru-09-short.mp3",
+      "text": "Перезагрузи сервер. Сначала останови бота, потом редис, потом telegram bot api. Подожди пять секунд, запускай обратно.",
+      "_tts_model": "eleven_flash_v2_5",
+      "_ambient": false
+    },
+    {
+      "id": "ru-10-podcast",
+      "language": "ru",
+      "path": "samples/synthetic/elevenlabs_rachel_mixed/ru-10-podcast.mp3",
+      "text": "Когда мы выбираем STT стек, первое что я делаю — смотрю не на бенчмарки, а на свою задачу. Real-time или batch? Один язык или много? Privacy критична или нет? От этих трёх вопросов всё дальше.",
+      "_tts_model": "eleven_v3",
+      "_ambient": false
+    },
+    {
+      "id": "en-01-clean",
+      "language": "en",
+      "path": "samples/synthetic/elevenlabs_rachel_mixed/en-01-clean.mp3",
+      "text": "I'm running a benchmark across ten speech-to-text models tonight, comparing local Whisper variants against cloud APIs from Groq and ElevenLabs. The goal is to see how architecture beats hardware in real-world scenarios.",
+      "_tts_model": "eleven_flash_v2_5",
+      "_ambient": false
+    },
+    {
+      "id": "en-02-fast",
+      "language": "en",
+      "path": "samples/synthetic/elevenlabs_rachel_mixed/en-02-fast.mp3",
+      "text": "So like, the thing is, I've been running this bot on Groq for three weeks, right, and it's, you know, fine for English, but the moment I send a Russian voice, it kind of, eh, falls apart on rare words.",
+      "_tts_model": "eleven_v3",
+      "_ambient": false
+    },
+    {
+      "id": "en-03-codeswitch",
+      "language": "en",
+      "path": "samples/synthetic/elevenlabs_rachel_mixed/en-03-codeswitch.mp3",
+      "text": "The pipeline в общем работает, but I want to add a fallback to local Whisper if the Groq API returns a five-hundred error. That way we don't lose transcriptions during outages.",
+      "_tts_model": "eleven_flash_v2_5",
+      "_ambient": false
+    },
+    {
+      "id": "en-04-digits",
+      "language": "en",
+      "path": "samples/synthetic/elevenlabs_rachel_mixed/en-04-digits.mp3",
+      "text": "The endpoint is api dot groq dot com slash openai slash v one slash audio slash transcriptions. Model ID is whisper dash large dash v three dash turbo. Set the timeout to six hundred seconds.",
+      "_tts_model": "eleven_flash_v2_5",
+      "_ambient": false
+    },
+    {
+      "id": "en-05-long",
+      "language": "en",
+      "path": "samples/synthetic/elevenlabs_rachel_mixed/en-05-long.mp3",
+      "text": "If you look at how non-autoregressive transducers work, especially the ones based on TDT like Parakeet, you'll notice that latency stays roughly constant regardless of output length, which makes them ideal for streaming use cases.",
+      "_tts_model": "eleven_flash_v2_5",
+      "_ambient": false
+    },
+    {
+      "id": "en-06-whisper",
+      "language": "en",
+      "path": "samples/synthetic/elevenlabs_rachel_mixed/en-06-whisper.mp3",
+      "text": "Late night recording, everyone's asleep, I'm testing how the model handles low-volume speech, so I'm keeping my voice very quiet on purpose to see what comes out.",
+      "_tts_model": "eleven_v3",
+      "_ambient": false
+    },
+    {
+      "id": "en-07-names",
+      "language": "en",
+      "path": "samples/synthetic/elevenlabs_rachel_mixed/en-07-names.mp3",
+      "text": "Stas Shupilkin, Telegram handle smolevich underscore voice underscore bot, repo name voice dash ai. Bench loads MLX Whisper, NVIDIA NeMo, Hugging Face transformers, and the Sber GigaAM model.",
+      "_tts_model": "eleven_flash_v2_5",
+      "_ambient": false
+    },
+    {
+      "id": "en-08-street",
+      "language": "en",
+      "path": "samples/synthetic/elevenlabs_rachel_mixed/en-08-street.mp3",
+      "text": "I'm walking outside right now to test how the bot handles street noise, wind, and the occasional car driving past. This is the kind of audio real users actually send.",
+      "_tts_model": "eleven_flash_v2_5",
+      "_ambient": true
+    },
+    {
+      "id": "en-09-short",
+      "language": "en",
+      "path": "samples/synthetic/elevenlabs_rachel_mixed/en-09-short.mp3",
+      "text": "Restart the bot. Stop redis first. Then the Telegram API container. Wait five seconds. Bring everything back up.",
+      "_tts_model": "eleven_flash_v2_5",
+      "_ambient": false
+    },
+    {
+      "id": "en-10-podcast",
+      "language": "en",
+      "path": "samples/synthetic/elevenlabs_rachel_mixed/en-10-podcast.mp3",
+      "text": "When you pick a speech recognition stack in twenty twenty-six, the first question isn't which model is the most accurate. It's whether you need real-time or batch, one language or many, and whether your data ever leaves the device.",
+      "_tts_model": "eleven_v3",
+      "_ambient": false
+    }
+  ]
+}

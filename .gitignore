@@ -3,6 +3,7 @@ __pycache__/
 *.pyc
 *.pyo
 *.egg-info/
+.cache/
 
 # Virtualenvs
 .venv/
@@ -15,11 +16,17 @@ __pycache__/
 .idea/
 .vscode/
 
+# Local static preview built by bench/build_pages.py
+site/
+
 # Personal audio — do NOT commit voice recordings (PII)
 samples/audio/
 
 # Local manifest with absolute paths to personal audio
 samples/manifest.json
+
+# Synthetic TTS samples (samples/synthetic/) are intentionally tracked —
+# they're generated via ElevenLabs, not PII. See samples/manifest_synthetic.json.
 
 # Bench run output beyond the curated final dataset
 results/raw/

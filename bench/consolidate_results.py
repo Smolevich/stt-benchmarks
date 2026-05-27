@@ -9,9 +9,9 @@ file with the latest created_at wins. This way a re-run replaces an earlier
 failed/partial attempt without manual cleanup.
 
 Usage:
-    python3 experiments/consolidate_results.py
-    python3 experiments/consolidate_results.py --language ru
-    python3 experiments/consolidate_results.py --include-edge-tts
+    python3 bench/consolidate_results.py
+    python3 bench/consolidate_results.py --language ru
+    python3 bench/consolidate_results.py --include-edge-tts
 """
 
 from __future__ import annotations
@@ -30,7 +30,7 @@ EDGE_TTS_SAMPLES = {"ru-dmitry", "ru-svetlana", "en-aria"}
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--results-dir", type=Path, default=Path("experiments/stt-results"))
+    parser.add_argument("--results-dir", type=Path, default=Path("results"))
     parser.add_argument("--out-json", type=Path, default=None)
     parser.add_argument("--out-csv", type=Path, default=None)
     parser.add_argument("--language", default=None, help="Filter by language (ru, en, …)")
@@ -79,13 +79,14 @@ def main() -> int:
 
     runs_list = list(runs.values())
 
-    by_key: dict[tuple[str, str], list[dict]] = defaultdict(list)
+    by_key: dict[tuple[str, str, str], list[dict]] = defaultdict(list)
     for r in runs_list:
-        by_key[(r["model_id"], r["language"])].append(r)
-        by_key[(r["model_id"], "all")].append(r)
+        audio_set_id = str(r.get("audio_set_id") or "live")
+        by_key[(r["model_id"], r["language"], audio_set_id)].append(r)
+        by_key[(r["model_id"], "all", audio_set_id)].append(r)
 
     summary = []
-    for (model_id, lang), group in sorted(by_key.items()):
+    for (model_id, lang, audio_set_id), group in sorted(by_key.items()):
         if not group:
             continue
         first = group[0]
@@ -95,6 +96,7 @@ def main() -> int:
             "runner": first["runner"],
             "arch": first["arch"],
             "language": lang,
+            "audio_set_id": audio_set_id,
             "sample_count": len({r["sample_id"] for r in group}),
             "run_count": len(group),
             "median_elapsed_s": round(statistics.median([float(r["elapsed_s"]) for r in group]), 4),
@@ -133,11 +135,11 @@ def main() -> int:
     if errors:
         print(f"  {len(errors)} recorded model errors")
     print()
-    print(f'{"model":<30} {"lang":<5} {"runs":>5} {"lat/10s":>8} {"WER%":>6} {"CER%":>6}')
-    print("-" * 70)
-    for row in sorted(summary, key=lambda x: (x["language"] != "all", x["language"], x["median_wer_pct"])):
+    print(f'{"model":<30} {"lang":<5} {"set":<28} {"runs":>5} {"lat/10s":>8} {"WER%":>6} {"CER%":>6}')
+    print("-" * 100)
+    for row in sorted(summary, key=lambda x: (x["audio_set_id"], x["language"] != "all", x["language"], x["median_wer_pct"])):
         lat = f"{row['median_latency_per_10s']:>8.2f}" if row["median_latency_per_10s"] is not None else f"{'—':>8}"
-        print(f'{row["model_id"]:<30} {row["language"]:<5} {row["run_count"]:>5} {lat} {row["median_wer_pct"]:>6.1f} {row["median_cer_pct"]:>6.1f}')
+        print(f'{row["model_id"]:<30} {row["language"]:<5} {row["audio_set_id"]:<28} {row["run_count"]:>5} {lat} {row["median_wer_pct"]:>6.1f} {row["median_cer_pct"]:>6.1f}')
 
     return 0
 

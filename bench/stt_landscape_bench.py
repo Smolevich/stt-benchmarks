@@ -4,15 +4,15 @@ The script intentionally talks to model libraries directly. Handy is useful as
 a GUI reference, but it does not expose a stable CLI/API for repeatable evals.
 
 Examples:
-    python3 experiments/stt_landscape_bench.py --list-models
+    python3 bench/stt_landscape_bench.py --list-models
 
-    python3 experiments/stt_landscape_bench.py \
-        --samples experiments/stt_samples.example.json \
+    python3 bench/stt_landscape_bench.py \
+        --samples samples/manifest.example.json \
         --models mlx-whisper-small \
         --warmup 1 --runs 3
 
-    GROQ_API_KEY=... python3 experiments/stt_landscape_bench.py \
-        --samples experiments/stt_samples.json \
+    GROQ_API_KEY=... python3 bench/stt_landscape_bench.py \
+        --samples samples/manifest.json \
         --models mlx-whisper-small,mlx-whisper-large-v3-turbo,groq-whisper-large-v3-turbo
 """
 
@@ -36,15 +36,25 @@ from typing import Any, Callable
 
 import psutil
 
-sys.path.append(str(Path(__file__).resolve().parents[1]))
-from experiments.wer_eval import compute_cer, compute_wer  # noqa: E402
+sys.path.append(str(Path(__file__).resolve().parent))
+from wer_eval import compute_cer, compute_wer  # noqa: E402
 
 
-DEFAULT_SAMPLE_MANIFEST = Path("experiments/stt_samples.json")
-FALLBACK_SAMPLE_MANIFEST = Path("experiments/stt_samples.example.json")
-DEFAULT_OUT_DIR = Path("experiments/stt-results")
+DEFAULT_SAMPLE_MANIFEST = Path("samples/manifest.json")
+FALLBACK_SAMPLE_MANIFEST = Path("samples/manifest.example.json")
+DEFAULT_OUT_DIR = Path("results")
 GROQ_URL = "https://api.groq.com/openai/v1/audio/transcriptions"
 ELEVENLABS_URL = "https://api.elevenlabs.io/v1/speech-to-text"
+SAMPLE_METADATA_FIELDS = [
+    "base_id",
+    "audio_set_id",
+    "tts_provider",
+    "tts_model",
+    "tts_voice",
+    "condition",
+    "sample_rate_hz",
+    "ambient",
+]
 
 
 @dataclass(frozen=True)
@@ -206,6 +216,15 @@ MODEL_REGISTRY: dict[str, ModelSpec] = {
         languages="50+ (works on EN, breaks on RU via funasr API)",
         disk_hint="~900 MB",
         notes="Alibaba via funasr. Auto-detect language, ignores language hint.",
+    ),
+    "t-one": ModelSpec(
+        id="t-one",
+        runner="tone",
+        model="t-tech/T-one",
+        arch="NAR (CTC)",
+        languages="RU (telephony 8kHz)",
+        disk_hint="~290 MB",
+        notes="T-Bank / T-Tech streaming Conformer-CTC. Install: pip install git+https://github.com/voicekit-team/T-one.git",
     ),
 }
 
@@ -403,6 +422,25 @@ def build_runner(spec: ModelSpec) -> Callable[[str, str], str]:
 
         return transcribe
 
+    if spec.runner == "tone":
+        try:
+            from tone import StreamingCTCPipeline, read_audio
+        except ImportError as exc:
+            raise RuntimeError(
+                "Install T-one first: pip install git+https://github.com/voicekit-team/T-one.git"
+            ) from exc
+
+        pipeline = StreamingCTCPipeline.from_hugging_face()
+
+        def transcribe(path: str, language: str) -> str:
+            audio = read_audio(path)
+            result = pipeline.forward_offline(audio)
+            if isinstance(result, list):
+                return " ".join(getattr(seg, "text", str(seg)) for seg in result).strip()
+            return str(result).strip()
+
+        return transcribe
+
     raise RuntimeError(f"Unknown runner: {spec.runner}")
 
 
@@ -421,19 +459,43 @@ def load_samples(path: Path) -> list[dict[str, Any]]:
 
     prepared = []
     base_dir = Path.cwd()
+    manifest_audio_set_id = manifest.get("audio_set_id")
+    sample_defaults = manifest.get("sample_defaults", {})
+    if sample_defaults is None:
+        sample_defaults = {}
+    if not isinstance(sample_defaults, dict):
+        raise ValueError(f"{path} sample_defaults must be an object when present")
+
     for sample in samples:
         sample_path = normalize_path(str(sample["path"]), base_dir)
         if not sample_path.exists():
             raise FileNotFoundError(sample_path)
-        prepared.append(
-            {
-                "id": str(sample["id"]),
-                "language": str(sample.get("language", "auto")),
-                "path": str(sample_path),
-                "text": str(sample["text"]),
-                "duration_s": audio_duration_s(sample_path),
-            }
-        )
+        base_id = str(sample.get("base_id") or sample["id"])
+        audio_set_id = sample.get("audio_set_id") or manifest_audio_set_id
+        sample_id = str(sample["id"])
+        if audio_set_id and "__" not in sample_id:
+            sample_id = f"{base_id}__{audio_set_id}"
+
+        metadata = {
+            key: sample.get(key, sample_defaults.get(key))
+            for key in SAMPLE_METADATA_FIELDS
+        }
+        metadata["base_id"] = base_id
+        metadata["audio_set_id"] = audio_set_id
+        if "tts_model" not in sample and "_tts_model" in sample:
+            metadata["tts_model"] = sample["_tts_model"]
+        if "ambient" not in sample and "_ambient" in sample:
+            metadata["ambient"] = sample["_ambient"]
+
+        item = {
+            "id": sample_id,
+            "language": str(sample.get("language", "auto")),
+            "path": str(sample_path),
+            "text": str(sample["text"]),
+            "duration_s": audio_duration_s(sample_path),
+        }
+        item.update({key: value for key, value in metadata.items() if value is not None})
+        prepared.append(item)
     return prepared
 
 
@@ -541,6 +603,14 @@ def benchmark_model(
                     "arch": spec.arch,
                     "model": spec.model,
                     "sample_id": sample["id"],
+                    "base_id": sample.get("base_id", sample["id"]),
+                    "audio_set_id": sample.get("audio_set_id"),
+                    "tts_provider": sample.get("tts_provider"),
+                    "tts_model": sample.get("tts_model"),
+                    "tts_voice": sample.get("tts_voice"),
+                    "condition": sample.get("condition"),
+                    "sample_rate_hz": sample.get("sample_rate_hz"),
+                    "ambient": sample.get("ambient"),
                     "language": sample["language"],
                     "duration_s": duration_s,
                     "run_index": run_index + 1,
@@ -561,6 +631,8 @@ def summarize_model(spec: ModelSpec, run_rows: list[dict[str, Any]]) -> list[dic
     rows: list[dict[str, Any]] = []
     languages = sorted({str(row["language"]) for row in run_rows})
     disk_bytes = model_cache_size_bytes(spec)
+    audio_sets = sorted({str(row.get("audio_set_id") or "") for row in run_rows if row.get("audio_set_id")})
+    audio_set_id = audio_sets[0] if len(audio_sets) == 1 else ("mixed" if audio_sets else None)
 
     for language in languages:
         lang_rows = [row for row in run_rows if row["language"] == language]
@@ -571,6 +643,7 @@ def summarize_model(spec: ModelSpec, run_rows: list[dict[str, Any]]) -> list[dic
                 "arch": spec.arch,
                 "model": spec.model,
                 "language": language,
+                "audio_set_id": audio_set_id,
                 "sample_count": len({row["sample_id"] for row in lang_rows}),
                 "run_count": len(lang_rows),
                 "median_elapsed_s": median([float(row["elapsed_s"]) for row in lang_rows]),
@@ -593,6 +666,7 @@ def summarize_model(spec: ModelSpec, run_rows: list[dict[str, Any]]) -> list[dic
             "arch": spec.arch,
             "model": spec.model,
             "language": "all",
+            "audio_set_id": audio_set_id,
             "sample_count": len({row["sample_id"] for row in run_rows}),
             "run_count": len(run_rows),
             "median_elapsed_s": median([float(row["elapsed_s"]) for row in run_rows]),
@@ -722,6 +796,14 @@ def main() -> int:
             "arch",
             "model",
             "sample_id",
+            "base_id",
+            "audio_set_id",
+            "tts_provider",
+            "tts_model",
+            "tts_voice",
+            "condition",
+            "sample_rate_hz",
+            "ambient",
             "language",
             "duration_s",
             "run_index",
@@ -743,6 +825,7 @@ def main() -> int:
             "arch",
             "model",
             "language",
+            "audio_set_id",
             "sample_count",
             "run_count",
             "median_elapsed_s",
