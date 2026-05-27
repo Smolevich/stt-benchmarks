@@ -281,7 +281,7 @@ def build_html(synthetic_rows: list[dict[str, Any]], live_rows: list[dict[str, A
   <main>
     <header>
       <h1>STT Benchmark Results</h1>
-      <p>Median WER/CER and latency grouped by audio set, language, and STT model. WER clean excludes the digits and proper-name stress samples. Audio files are not published.</p>
+      <p>Median WER/CER and latency grouped by audio set, language, and STT model. WER clean excludes the digits and proper-name stress samples. Audio files are not published. <strong>Runs</strong> = (number of unique samples) × (repetitions).</p>
       <div class="meta">
         <span>Generated: {esc(generated_at)}</span>
         <span>Synthetic data: {esc(synthetic_created or "not available")}</span>
