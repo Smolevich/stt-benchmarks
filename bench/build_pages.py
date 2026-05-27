@@ -16,6 +16,15 @@ from typing import Any
 DETAILS = "runs_detail"
 EXCLUDE_CLEAN_SUFFIXES = ("-04-digits", "-07-names")
 
+# Models that only support a single language — exclude from other-language tables.
+# A model producing 100 % WER on a language it doesn't speak adds no signal.
+LANGUAGE_ONLY: dict[str, str] = {
+    "gigaam-v2-ctc": "ru",
+    "gigaam-v2-rnnt": "ru",
+    "t-one": "ru",
+    "transformers-moonshine-base": "en",
+}
+
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
@@ -59,6 +68,11 @@ def summarize(runs: list[dict[str, Any]]) -> list[dict[str, Any]]:
 
     rows = []
     for (audio_set, language, model_id), group in grouped.items():
+        # Skip language-incompatible models — they produce 100% WER and add no signal.
+        supported_lang = LANGUAGE_ONLY.get(model_id)
+        if supported_lang is not None and language != supported_lang:
+            continue
+
         clean_group = [row for row in group if is_clean_sample(row)]
         first = group[0]
         latencies = [float(row["latency_per_10s"]) for row in group if row.get("latency_per_10s") is not None]
