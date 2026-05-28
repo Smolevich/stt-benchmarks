@@ -11,6 +11,14 @@ elevenlabs-scribe-v1-experimental,elevenlabs,AR,en,elevenlabs_rachel_mixed,10,10
 elevenlabs-scribe-v1-experimental,elevenlabs,AR,en,live,10,10,1.1877,0.979,0.0,2.03,49.2
 elevenlabs-scribe-v1-experimental,elevenlabs,AR,ru,elevenlabs_rachel_mixed,10,10,1.2206,0.959,6.97,5.28,48.9
 elevenlabs-scribe-v1-experimental,elevenlabs,AR,ru,live,10,10,1.2553,1.0417,6.97,5.28,47.9
+fish-audio-asr,fish_audio,AR,all,elevenlabs_rachel_mixed,20,60,0.5652,0.4608,10.71,7.03,49.2
+fish-audio-asr,fish_audio,AR,all,live,20,60,0.5678,0.3589,18.75,13.11,48.7
+fish-audio-asr,fish_audio,AR,all,silero_v4_ru_xenia_48k,10,30,0.9486,1.0648,23.93,18.96,48.4
+fish-audio-asr,fish_audio,AR,en,elevenlabs_rachel_mixed,10,30,0.5485,0.4105,4.91,2.07,49.2
+fish-audio-asr,fish_audio,AR,en,live,10,30,0.5865,0.3034,16.15,10.44,48.7
+fish-audio-asr,fish_audio,AR,ru,elevenlabs_rachel_mixed,10,30,0.5696,0.4668,11.48,9.05,48.5
+fish-audio-asr,fish_audio,AR,ru,live,10,30,0.5534,0.4137,26.32,16.8,48.5
+fish-audio-asr,fish_audio,AR,ru,silero_v4_ru_xenia_48k,10,30,0.9486,1.0648,23.93,18.96,48.4
 gigaam-v2-ctc,gigaam,NAR (CTC),all,elevenlabs_rachel_mixed,20,20,0.6852,0.5368,85.0,71.77,2554.6
 gigaam-v2-ctc,gigaam,NAR (CTC),all,live,20,20,0.7021,0.5478,87.5,72.07,2987.6
 gigaam-v2-ctc,gigaam,NAR (CTC),all,silero_v4_ru_xenia_48k,10,10,0.4897,0.6596,20.8,20.68,2184.8

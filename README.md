@@ -1,6 +1,6 @@
-# STT Benchmarks — 12 Models on Live Voice, RU + EN
+# STT Benchmarks — 13 Models on Live Voice, RU + EN
 
-Hands-on benchmark of 12 speech-to-text models on 20 live voice memos (10 RU + 10 EN), recorded on iPhone Voice Memos and run on a Mac mini M4 Pro. Comparing local (mlx-whisper, GigaAM, Parakeet, Moonshine, Sense Voice) against cloud (Groq Whisper Turbo, ElevenLabs Scribe v1, ElevenLabs Scribe v1 experimental).
+Hands-on benchmark of 13 speech-to-text models on 20 live voice memos (10 RU + 10 EN), recorded on iPhone Voice Memos and run on a Mac mini M4 Pro. Comparing local (mlx-whisper, GigaAM, Parakeet, Moonshine, Sense Voice, T-one) against cloud (Groq Whisper Turbo, ElevenLabs Scribe v1, ElevenLabs Scribe v1 experimental, Fish Audio `transcribe-1`).
 
 Companion to the LinkedIn carousel and blog post — link added once published.
 

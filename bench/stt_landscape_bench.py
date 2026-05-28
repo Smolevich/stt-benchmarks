@@ -45,6 +45,7 @@ FALLBACK_SAMPLE_MANIFEST = Path("samples/manifest.example.json")
 DEFAULT_OUT_DIR = Path("results")
 GROQ_URL = "https://api.groq.com/openai/v1/audio/transcriptions"
 ELEVENLABS_URL = "https://api.elevenlabs.io/v1/speech-to-text"
+FISH_AUDIO_URL = "https://api.fish.audio/v1/asr"
 SAMPLE_METADATA_FIELDS = [
     "base_id",
     "audio_set_id",
@@ -128,6 +129,15 @@ MODEL_REGISTRY: dict[str, ModelSpec] = {
         languages="99",
         requires_env="ELEVENLABS_API_KEY",
         notes="ElevenLabs Scribe v1 experimental — newer, stronger on RU.",
+    ),
+    "fish-audio-asr": ModelSpec(
+        id="fish-audio-asr",
+        runner="fish_audio",
+        model="transcribe-1",
+        arch="AR",
+        languages="13",
+        requires_env="FISH_AUDIO_API_KEY",
+        notes="Fish Audio ASR API. $0.36/audio hour.",
     ),
     "nemo-parakeet-tdt-0.6b-v2": ModelSpec(
         id="nemo-parakeet-tdt-0.6b-v2",
@@ -329,6 +339,28 @@ def build_runner(spec: ModelSpec) -> Callable[[str, str], str]:
                 response = httpx.post(
                     ELEVENLABS_URL,
                     headers={"xi-api-key": os.environ["ELEVENLABS_API_KEY"]},
+                    files=files,
+                    data=data,
+                    timeout=600,
+                )
+            response.raise_for_status()
+            return str(response.json().get("text", "")).strip()
+
+        return transcribe
+
+    if spec.runner == "fish_audio":
+        import httpx
+
+        def transcribe(path: str, language: str) -> str:
+            with open(path, "rb") as audio_file:
+                media_type = mimetypes.guess_type(path)[0] or "application/octet-stream"
+                files = {"audio": (Path(path).name, audio_file, media_type)}
+                data: dict[str, str] = {"ignore_timestamps": "true"}
+                if language != "auto":
+                    data["language"] = language
+                response = httpx.post(
+                    FISH_AUDIO_URL,
+                    headers={"Authorization": f"Bearer {os.environ['FISH_AUDIO_API_KEY']}"},
                     files=files,
                     data=data,
                     timeout=600,
@@ -577,7 +609,7 @@ def benchmark_model(
 ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
     transcribe = runner_cache.get(spec)
     run_rows: list[dict[str, Any]] = []
-    is_cloud = spec.runner in {"groq", "elevenlabs"}
+    is_cloud = spec.runner in {"groq", "elevenlabs", "fish_audio"}
     pause = cloud_sleep_s if is_cloud else 0.0
 
     for sample in samples:

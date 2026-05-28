@@ -12,7 +12,7 @@ python3 bench/stt_landscape_bench.py \
     --warmup 1 --runs 3
 
 # Full RU + EN sweep with cloud models (needs API keys in env)
-GROQ_API_KEY=... ELEVENLABS_API_KEY=... \
+GROQ_API_KEY=... ELEVENLABS_API_KEY=... FISH_AUDIO_API_KEY=... \
 python3 bench/stt_landscape_bench.py \
     --samples samples/manifest.json \
     --out-dir results/ \
