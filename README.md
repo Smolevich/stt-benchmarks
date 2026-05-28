@@ -1,6 +1,6 @@
-# STT Benchmarks — 13 Models on Live Voice, RU + EN
+# STT Benchmarks — 14 Models on Live Voice, RU + EN
 
-Hands-on benchmark of 13 speech-to-text models on 20 live voice memos (10 RU + 10 EN), recorded on iPhone Voice Memos and run on a Mac mini M4 Pro. Comparing local (mlx-whisper, GigaAM, Parakeet, Moonshine, Sense Voice, T-one) against cloud (Groq Whisper Turbo, ElevenLabs Scribe v1, ElevenLabs Scribe v1 experimental, Fish Audio `transcribe-1`).
+Hands-on benchmark of 14 speech-to-text models on 20 live voice memos (10 RU + 10 EN), recorded on iPhone Voice Memos and run on a Mac mini M4 Pro. Comparing local (mlx-whisper, GigaAM, Parakeet, Moonshine, Sense Voice, T-one) against cloud (Groq Whisper Turbo, ElevenLabs Scribe v1, ElevenLabs Scribe v1 experimental, Fish Audio `transcribe-1`).
 
 Companion to the LinkedIn carousel and blog post — link added once published.
 
@@ -40,7 +40,7 @@ Live audio files are **not included** — they're personal voice recordings. TTS
 
 WER clean excludes `*-04-digits` and `*-07-names` — those two samples push WER to 70-95% across all models because Whisper normalizes "twenty" → "20" and doesn't know identifiers like `smolevich_voice_bot`. The artifact is real but masks model differences.
 
-### Russian — 11 models tested
+### Russian — 12 models tested
 
 | # | Model | Where | Latency / 10s | WER | CER |
 |---|---|---|---|---|---|
@@ -53,10 +53,11 @@ WER clean excludes `*-04-digits` and `*-07-names` — those two samples push WER
 | 7 | Parakeet TDT v3 (mlx) | local | 0.22 s | 21.0% | 15.2% |
 | 8 | ElevenLabs Scribe v1 (legacy) | cloud | 0.93 s | 23.1% | 22.0% |
 | 9 | mlx-whisper-large-v3 | local | 1.34 s | 24.3% | 16.3% |
-| 10 | T-one | local | 3.16 s | 28.5% | 20.8% |
-| 11 | mlx-whisper-small | local | 0.52 s | 28.8% | 17.6% |
+| 10 | Fish Audio transcribe-1 | cloud | 0.41 s | 26.3% | 16.8% |
+| 11 | T-one | local | 3.16 s | 28.5% | 20.8% |
+| 12 | mlx-whisper-small | local | 0.52 s | 28.8% | 17.6% |
 
-### English — 10 models tested
+### English — 11 models tested
 
 | # | Model | Where | Latency / 10s | WER | CER |
 |---|---|---|---|---|---|
@@ -64,12 +65,13 @@ WER clean excludes `*-04-digits` and `*-07-names` — those two samples push WER
 | 2 | ElevenLabs Scribe v1 | cloud | 0.62 s | 12.7% | 8.4% |
 | 3 | Groq Whisper L-v3 Turbo | cloud | 0.16 s | 15.0% | 7.8% |
 | 4 | mlx-whisper-large-v3-turbo | local | 0.52 s | 15.5% | 8.1% |
-| 5 | mlx-whisper-large-v3 | local | 0.97 s | 17.1% | 8.7% |
-| 6 | mlx-whisper-medium | local | 0.72 s | 17.7% | 7.4% |
-| 7 | Parakeet TDT v3 (mlx) | local | 0.18 s | 17.9% | 10.0% |
-| 8 | mlx-whisper-small | local | 0.41 s | 22.4% | 11.5% |
-| 9 | Moonshine base | local | 2.26 s | 24.7% | 14.2% |
-| 10 | Sense Voice small | local | 1.38 s | 31.7% | 17.4% |
+| 5 | Fish Audio transcribe-1 | cloud | 0.30 s | 16.1% | 10.4% |
+| 6 | mlx-whisper-large-v3 | local | 0.97 s | 17.1% | 8.7% |
+| 7 | mlx-whisper-medium | local | 0.72 s | 17.7% | 7.4% |
+| 8 | Parakeet TDT v3 (mlx) | local | 0.18 s | 17.9% | 10.0% |
+| 9 | mlx-whisper-small | local | 0.41 s | 22.4% | 11.5% |
+| 10 | Moonshine base | local | 2.26 s | 24.7% | 14.2% |
+| 11 | Sense Voice small | local | 1.38 s | 31.7% | 17.4% |
 
 `mlx` after Parakeet means it ran via the [`parakeet-mlx`](https://github.com/senstella/parakeet-mlx) community port. Through `transformers` (PyTorch CPU) the same model gives 23.0% RU / 21.7% EN at 1.15-1.48 s latency — see "Runtime matters" below.
 
