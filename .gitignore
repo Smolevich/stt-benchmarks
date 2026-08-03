@@ -15,6 +15,12 @@ __pycache__/
 # Editor
 .idea/
 .vscode/
+.claude/settings.local.json
+
+# API keys — never commit. Runners read them from the environment.
+.env
+.env.*
+!.env.example
 
 # Local static preview built by bench/build_pages.py
 site/
