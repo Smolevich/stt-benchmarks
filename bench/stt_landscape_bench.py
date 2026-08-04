@@ -46,6 +46,7 @@ DEFAULT_OUT_DIR = Path("results")
 GROQ_URL = "https://api.groq.com/openai/v1/audio/transcriptions"
 ELEVENLABS_URL = "https://api.elevenlabs.io/v1/speech-to-text"
 FISH_AUDIO_URL = "https://api.fish.audio/v1/asr"
+DEEPGRAM_URL = "https://api.deepgram.com/v1/listen"
 SAMPLE_METADATA_FIELDS = [
     "base_id",
     "audio_set_id",
@@ -68,6 +69,9 @@ class ModelSpec:
     disk_hint: str = ""
     requires_env: str = ""
     notes: str = ""
+    # Force a fixed language code for every sample instead of the manifest one.
+    # Used for multilingual API modes (e.g. Deepgram `language=multi`).
+    language_override: str = ""
 
 
 MODEL_REGISTRY: dict[str, ModelSpec] = {
@@ -138,6 +142,34 @@ MODEL_REGISTRY: dict[str, ModelSpec] = {
         languages="13",
         requires_env="FISH_AUDIO_API_KEY",
         notes="Fish Audio ASR API. $0.36/audio hour.",
+    ),
+    "deepgram-nova-3": ModelSpec(
+        id="deepgram-nova-3",
+        runner="deepgram",
+        model="nova-3",
+        arch="AR",
+        languages="36",
+        requires_env="DEEPGRAM_API_KEY",
+        notes="Deepgram Nova-3, per-sample language code from the manifest.",
+    ),
+    "deepgram-nova-3-multi": ModelSpec(
+        id="deepgram-nova-3-multi",
+        runner="deepgram",
+        model="nova-3",
+        arch="AR",
+        languages="multi",
+        requires_env="DEEPGRAM_API_KEY",
+        notes="Deepgram Nova-3 in multilingual mode (language=multi) — the mode their docs recommend for RU.",
+        language_override="multi",
+    ),
+    "deepgram-nova-2": ModelSpec(
+        id="deepgram-nova-2",
+        runner="deepgram",
+        model="nova-2",
+        arch="AR",
+        languages="36",
+        requires_env="DEEPGRAM_API_KEY",
+        notes="Deepgram Nova-2 — previous generation, kept as a same-vendor comparison point.",
     ),
     "nemo-parakeet-tdt-0.6b-v2": ModelSpec(
         id="nemo-parakeet-tdt-0.6b-v2",
@@ -367,6 +399,44 @@ def build_runner(spec: ModelSpec) -> Callable[[str, str], str]:
                 )
             response.raise_for_status()
             return str(response.json().get("text", "")).strip()
+
+        return transcribe
+
+    if spec.runner == "deepgram":
+        import httpx
+
+        def transcribe(path: str, language: str) -> str:
+            # Deepgram takes the raw audio bytes as the request body (no multipart)
+            # and every knob as a query parameter.
+            params: dict[str, str] = {
+                "model": spec.model,
+                "smart_format": "true",
+                "punctuate": "true",
+            }
+            effective_language = spec.language_override or language
+            if effective_language != "auto":
+                params["language"] = effective_language
+            media_type = mimetypes.guess_type(path)[0] or "application/octet-stream"
+            audio_bytes = Path(path).read_bytes()
+            response = httpx.post(
+                DEEPGRAM_URL,
+                params=params,
+                headers={
+                    "Authorization": f"Token {os.environ['DEEPGRAM_API_KEY']}",
+                    "Content-Type": media_type,
+                },
+                content=audio_bytes,
+                timeout=600,
+            )
+            response.raise_for_status()
+            payload = response.json()
+            channels = payload.get("results", {}).get("channels", [])
+            if not channels:
+                return ""
+            alternatives = channels[0].get("alternatives", [])
+            if not alternatives:
+                return ""
+            return str(alternatives[0].get("transcript", "")).strip()
 
         return transcribe
 
@@ -609,7 +679,7 @@ def benchmark_model(
 ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
     transcribe = runner_cache.get(spec)
     run_rows: list[dict[str, Any]] = []
-    is_cloud = spec.runner in {"groq", "elevenlabs", "fish_audio"}
+    is_cloud = spec.runner in {"groq", "elevenlabs", "fish_audio", "deepgram"}
     pause = cloud_sleep_s if is_cloud else 0.0
 
     for sample in samples:
@@ -766,7 +836,7 @@ def parse_args() -> argparse.Namespace:
         "--cloud-sleep-s",
         type=float,
         default=0.0,
-        help="Sleep N seconds before each cloud (groq/elevenlabs) request to dodge rate limits.",
+        help="Sleep N seconds before each cloud (groq/elevenlabs/fish/deepgram) request to dodge rate limits.",
     )
     return parser.parse_args()
 

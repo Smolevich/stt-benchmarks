@@ -2,7 +2,7 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-Reproducible STT benchmark harness for the "STT landscape" article. Compares local (MLX / NeMo / transformers / parakeet-mlx / GigaAM / funasr) and cloud (Groq, ElevenLabs) speech-to-text models on RU + EN samples. Outputs WER/CER, latency-per-10s-audio, and peak RSS.
+Reproducible STT benchmark harness for the "STT landscape" article. Compares local (MLX / NeMo / transformers / parakeet-mlx / GigaAM / funasr) and cloud (Groq, ElevenLabs, Fish Audio, Deepgram) speech-to-text models on RU + EN samples. Outputs WER/CER, latency-per-10s-audio, and peak RSS.
 
 [README.md](README.md) is the user-facing entry point — TL;DR, result tables, reproduction steps, methodology, limitations. Read it first; this file is the orientation map for working *on* the repo.
 
@@ -20,4 +20,5 @@ Reproducible STT benchmark harness for the "STT landscape" article. Compares loc
 - [docs/commands.md](docs/commands.md) — bench / consolidate / plot invocations.
 - [docs/environments.md](docs/environments.md) — why there are two venvs (Python 3.12 vs 3.11) and which models live where.
 - [docs/architecture.md](docs/architecture.md) — runner registry, caches, latency metric, how to add a model.
+- [docs/deepgram.md](docs/deepgram.md) — Deepgram key/env var, registered model IDs, and the raw-body API quirk.
 - [docs/path-caveat.md](docs/path-caveat.md) — **read before running**: `from experiments.wer_eval import ...` in `stt_landscape_bench.py` is broken and needs patching on a fresh clone.
