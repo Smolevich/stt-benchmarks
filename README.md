@@ -8,7 +8,7 @@ Companion to the LinkedIn carousel and blog post — link added once published.
 
 **ElevenLabs Scribe v1 experimental is the strongest model in both languages.** 11.5% WER on RU and 11.5% WER on EN (clean subset). Same provider's `scribe_v1` (the older default) gives 23.1% on RU — two-times worse — so the API parameter alone makes the biggest difference. Architecture (AR vs NAR), specialization, runtime, and cloud-vs-local all matter less than the model version.
 
-**But "newer" is not automatically "better": Deepgram's flagship Nova-3 lost to its own predecessor Nova-2 on this set** (31.0% vs 21.4% RU, 23.6% vs 20.5% EN). Deepgram's multilingual mode (`language=multi`) recovers part of the RU gap (25.2%) but still trails Nova-2. Same provider, same audio, two model versions pointing in opposite directions from the ElevenLabs case.
+**But "newer" is not automatically "better": Deepgram's flagship Nova-3 came out behind its own predecessor Nova-2 on Russian** — 24.0% vs 18.6% WER clean, a 5.4-point gap on identical audio. On English the two are 20.9% vs 18.5%, a 2.4-point gap that sits right at this bench's noise floor, so read the Russian result as the finding and the English one as "no advantage". Either way, upgrading to the newer model ID would not have helped here — the opposite of the ElevenLabs case.
 
 See `results/summary.csv` for full ranking; `results/consolidated.json` for raw transcripts.
 
@@ -42,48 +42,50 @@ Live audio files are **not included** — they're personal voice recordings. TTS
 
 WER clean excludes `*-04-digits` and `*-07-names` — those two samples push WER to 70-95% across all models because Whisper normalizes "twenty" → "20" and doesn't know identifiers like `smolevich_voice_bot`. The artifact is real but masks model differences.
 
+Every number below is **WER clean** — the two stress samples are excluded from every row. The `Data` column says which sweep a row comes from; see the caveat under the tables before ranking across sweeps.
+
 ### Russian — 15 models tested
 
-| # | Model | Where | Latency / 10s | WER | CER |
-|---|---|---|---|---|---|
-| 1 | ElevenLabs Scribe v1 experimental | cloud | 0.82 s | **11.5%** | 10.1% |
-| 2 | Groq Whisper L-v3 Turbo | cloud | 0.21 s | 17.9% | 15.6% |
-| 3 | GigaAM v2 CTC | local | 0.42 s | 18.2% | 17.8% |
-| 4 | mlx-whisper-large-v3-turbo | local | 0.69 s | 19.4% | 17.3% |
-| 5 | mlx-whisper-medium | local | 0.96 s | 20.0% | 13.1% |
-| 6 | GigaAM v2 RNN-T | local | 0.49 s | 21.0% | 18.9% |
-| 7 | Parakeet TDT v3 (mlx) | local | 0.22 s | 21.0% | 15.2% |
-| 8 | Deepgram Nova-2 | cloud | 0.95 s | 21.4% | 15.7% |
-| 9 | ElevenLabs Scribe v1 (legacy) | cloud | 0.93 s | 23.1% | 22.0% |
-| 10 | mlx-whisper-large-v3 | local | 1.34 s | 24.3% | 16.3% |
-| 11 | Deepgram Nova-3 (`language=multi`) | cloud | 0.81 s | 25.2% | 15.3% |
-| 12 | Fish Audio transcribe-1 | cloud | 0.41 s | 26.3% | 16.8% |
-| 13 | T-one | local | 3.16 s | 28.5% | 20.8% |
-| 14 | mlx-whisper-small | local | 0.52 s | 28.8% | 17.6% |
-| 15 | Deepgram Nova-3 (`language=ru`) | cloud | 0.85 s | 31.0% | 17.0% |
+| # | Model | Where | Data | Latency / 10s | WER | CER |
+|---|---|---|---|---|---|---|
+| 1 | ElevenLabs Scribe v1 experimental | cloud | May 2026 | 0.82 s | **11.5%** | 10.1% |
+| 2 | Groq Whisper L-v3 Turbo | cloud | May 2026 | 0.21 s | 17.9% | 15.6% |
+| 3 | GigaAM v2 CTC | local | May 2026 | 0.42 s | 18.2% | 17.8% |
+| 4 | Deepgram Nova-2 | cloud | Aug 2026 | 0.99 s | 18.6% | 14.9% |
+| 5 | mlx-whisper-large-v3-turbo | local | May 2026 | 0.69 s | 19.4% | 17.3% |
+| 6 | mlx-whisper-medium | local | May 2026 | 0.96 s | 20.0% | 13.1% |
+| 7 | GigaAM v2 RNN-T | local | May 2026 | 0.49 s | 21.0% | 18.9% |
+| 8 | Parakeet TDT v3 (mlx) | local | May 2026 | 0.22 s | 21.0% | 15.2% |
+| 9 | Deepgram Nova-3 (`language=multi`) | cloud | Aug 2026 | 0.83 s | 21.5% | 14.1% |
+| 10 | Fish Audio transcribe-1 | cloud | Aug 2026 | 0.42 s | 22.9% | 14.3% |
+| 11 | ElevenLabs Scribe v1 (legacy) | cloud | May 2026 | 0.93 s | 23.1% | 22.0% |
+| 12 | Deepgram Nova-3 (`language=ru`) | cloud | Aug 2026 | 0.95 s | 24.0% | 14.9% |
+| 13 | mlx-whisper-large-v3 | local | May 2026 | 1.34 s | 24.3% | 16.3% |
+| 14 | T-one | local | May 2026 | 3.16 s | 28.5% | 20.8% |
+| 15 | mlx-whisper-small | local | May 2026 | 0.52 s | 28.8% | 17.6% |
 
 ### English — 14 models tested
 
-| # | Model | Where | Latency / 10s | WER | CER |
-|---|---|---|---|---|---|
-| 1 | ElevenLabs Scribe v1 experimental | cloud | 0.63 s | **11.5%** | 7.8% |
-| 2 | ElevenLabs Scribe v1 | cloud | 0.62 s | 12.7% | 8.4% |
-| 3 | Groq Whisper L-v3 Turbo | cloud | 0.16 s | 15.0% | 7.8% |
-| 4 | mlx-whisper-large-v3-turbo | local | 0.52 s | 15.5% | 8.1% |
-| 5 | Fish Audio transcribe-1 | cloud | 0.30 s | 16.1% | 10.4% |
-| 6 | mlx-whisper-large-v3 | local | 0.97 s | 17.1% | 8.7% |
-| 7 | mlx-whisper-medium | local | 0.72 s | 17.7% | 7.4% |
-| 8 | Parakeet TDT v3 (mlx) | local | 0.18 s | 17.9% | 10.0% |
-| 9 | Deepgram Nova-2 | cloud | 0.72 s | 20.5% | 10.4% |
-| 10 | Deepgram Nova-3 (`language=multi`) | cloud | 0.68 s | 21.9% | 10.7% |
-| 11 | mlx-whisper-small | local | 0.41 s | 22.4% | 11.5% |
-| 12 | Deepgram Nova-3 (`language=en`) | cloud | 0.65 s | 23.6% | 11.6% |
-| 13 | Moonshine base | local | 2.26 s | 24.7% | 14.2% |
-| 14 | Sense Voice small | local | 1.38 s | 31.7% | 17.4% |
+| # | Model | Where | Data | Latency / 10s | WER | CER |
+|---|---|---|---|---|---|---|
+| 1 | ElevenLabs Scribe v1 experimental | cloud | May 2026 | 0.63 s | **11.5%** | 7.8% |
+| 2 | ElevenLabs Scribe v1 | cloud | May 2026 | 0.62 s | 12.7% | 8.4% |
+| 3 | Fish Audio transcribe-1 | cloud | Aug 2026 | 0.31 s | 15.0% | 7.9% |
+| 4 | Groq Whisper L-v3 Turbo | cloud | May 2026 | 0.16 s | 15.0% | 7.8% |
+| 5 | mlx-whisper-large-v3-turbo | local | May 2026 | 0.52 s | 15.5% | 8.1% |
+| 6 | mlx-whisper-large-v3 | local | May 2026 | 0.97 s | 17.1% | 8.7% |
+| 7 | mlx-whisper-medium | local | May 2026 | 0.72 s | 17.7% | 7.4% |
+| 8 | Parakeet TDT v3 (mlx) | local | May 2026 | 0.18 s | 17.9% | 10.0% |
+| 9 | Deepgram Nova-3 (`language=multi`) | cloud | Aug 2026 | 0.70 s | 17.9% | 9.7% |
+| 10 | Deepgram Nova-2 | cloud | Aug 2026 | 0.77 s | 18.5% | 9.1% |
+| 11 | Deepgram Nova-3 (`language=en`) | cloud | Aug 2026 | 0.73 s | 20.9% | 9.3% |
+| 12 | mlx-whisper-small | local | May 2026 | 0.41 s | 22.4% | 11.5% |
+| 13 | Moonshine base | local | May 2026 | 2.26 s | 24.7% | 14.2% |
+| 14 | Sense Voice small | local | May 2026 | 1.38 s | 31.7% | 17.4% |
 
 `mlx` after Parakeet means it ran via the [`parakeet-mlx`](https://github.com/senstella/parakeet-mlx) community port. Through `transformers` (PyTorch CPU) the same model gives 23.0% RU / 21.7% EN at 1.15-1.48 s latency — see "Runtime matters" below.
 
-The Fish Audio and Deepgram rows were added later than the rest and are medians over the full live set recomputed from the committed `results/consolidated.json` (3 runs per sample, all 20 samples); the older rows come from the original May 2026 sweep. Re-run `python bench/consolidate_results.py` to reproduce the recomputed rows.
+**Caveat on the `Data` column — do not rank tightly across sweeps.** The May 2026 rows are the original article sweep; that raw data is no longer in the repo. The Aug 2026 rows (Fish Audio, Deepgram) are medians over the committed `results/consolidated.json`, 8 clean samples × 3 runs. The two are *not* interchangeable: recomputing a May row from today's committed data moves it a lot — ElevenLabs Scribe v1 experimental, for example, comes out at 6.0% RU rather than 11.5%, because the committed re-runs kept only one run per sample for the older models. Differences of a few points between a May row and an Aug row are therefore not meaningful. Rows within the same sweep are comparable, and `results/summary.csv` plus the [GitHub Pages report](https://smolevich.github.io/stt-benchmarks/) are internally consistent throughout.
 
 ## What I found
 
@@ -99,7 +101,9 @@ The Fish Audio and Deepgram rows were added later than the rest and are medians 
 
 6. **Multilingual NAR models lose to specialized models on a language they aren't tuned for.** Sense Voice (Alibaba, 50+ languages) gave 31.7% WER on English — worst in the set. Specialization clearly matters.
 
-7. **The newer model version can be the worse one — check, don't assume (Deepgram).** Finding #1 says upgrade your model version; Deepgram is the counter-example that makes the point sharper: *test it, don't trust the version number.* Nova-3, Deepgram's current flagship, came out **behind** its own predecessor Nova-2 on this audio — 31.0% vs 21.4% RU, 23.6% vs 20.5% EN. Switching Nova-3 to `language=multi` (the mode Deepgram's docs recommend for non-English) recovers about 6 points on RU, to 25.2%, but still loses to Nova-2. Latency was the expected story: 0.65-0.95 s per 10 s of audio, faster than ElevenLabs (0.82-0.93 s) and Whisper-large locally, slower than Groq. Part of the WER gap is the `smart_format` artifact — Deepgram writes spoken numbers as digits, same normalization mismatch Whisper has (see "Limitations").
+7. **The newer model version can be the worse one — check, don't assume (Deepgram).** Finding #1 says upgrade your model version; Deepgram is the counter-example that makes the point sharper: *test it, don't trust the version number.* Nova-3, Deepgram's current flagship, came out **behind** its own predecessor Nova-2 on Russian — 24.0% vs 18.6% WER clean, 5.4 points on identical audio. On English the gap is 20.9% vs 18.5%, which is at the noise floor and should be read as "no gain", not "a loss". Switching Nova-3 to `language=multi` (the mode Deepgram's docs recommend for non-English) buys 2.4 points on RU, to 21.5% — also at the noise floor, so the multilingual mode is not the fix for Russian that the docs imply. Latency is 0.70-0.99 s per 10 s of audio, in the same band as ElevenLabs Scribe and well behind Groq.
+
+8. **One query parameter decides whether Deepgram is competitive on English.** The runner sends `smart_format=true`, Deepgram's recommended production default. Turning it off — same audio, same models, 3 runs, clean subset — moves EN from 17.9% to **14.6%** for Nova-3 multilingual (−3.3 points) and from 18.5% to 15.7% for Nova-2 (−2.8 points). At 14.6% Nova-3 multilingual edges past Fish Audio (15.0%) instead of trailing the whole cloud field. Nova-3 with `language=en` barely moves (20.9% → 20.7%), so the effect is specific to the multilingual and Nova-2 paths. On **Russian the flag changes nothing at all** — on the digits sample the transcript is byte-identical with it on and off. Keeping `smart_format=on` is a defensible default, but it is a real ~3-point tax on the English numbers above, not a rounding artifact.
 
 ## Reproducing the bench
 
@@ -172,7 +176,17 @@ DEEPGRAM_API_KEY=... python bench/stt_landscape_bench.py \
 python bench/consolidate_results.py
 ```
 
-Produces `results/consolidated_<timestamp>.json` (all runs deduped) and `consolidated_summary_<timestamp>.csv` (medians).
+Produces `results/consolidated_<timestamp>.json` (all runs deduped) and `consolidated_summary_<timestamp>.csv` (medians). Those timestamped files are gitignored working output — the committed snapshots are separate copies, so promote them by hand:
+
+```bash
+TS=<timestamp printed above>
+cp results/consolidated_$TS.json         results/consolidated.json
+cp results/consolidated_$TS.json         results/synthetic_consolidated.json
+cp results/consolidated_summary_$TS.csv  results/summary.csv
+cp results/consolidated_summary_$TS.csv  results/synthetic_summary.csv
+```
+
+`bench/build_pages.py` and the GitHub Pages workflow read the committed copies, not the timestamped ones.
 
 ## Methodology
 
@@ -190,7 +204,8 @@ Produces `results/consolidated_<timestamp>.json` (all runs deduped) and `consoli
 - **Single speaker, single recording device.** Results are biased toward the bench operator's voice and an iPhone's mic. Other speakers, accents, and devices will give different numbers.
 - **Small sample size.** 10 sample × 3 runs per language. Confidence intervals are wide — treat differences smaller than ~2 points WER as noise.
 - **Synthetic data has TTS bias.** TTS audio is cleaner and acoustically simpler than real speech. If a TTS provider and an STT provider share training data, modeling assumptions, or audio preprocessing pipelines, synthetic audio can make that provider's STT look artificially strong — vendor self-bias. ElevenLabs Scribe evaluated on ElevenLabs-generated audio is a direct example. Synthetic results are treated as reproducibility/control evidence only; **live human voice remains the primary benchmark.** See [docs/methodology.md](docs/methodology.md) for details.
-- **No number-word normalization.** Whisper-family models normalize "двадцать" → "20", but our reference text keeps "двадцати". On digit-heavy samples this inflates WER artificially by 5-15 points. We mitigated by reporting "WER clean" without those samples; for "WER full" see `results/consolidated.json`. Deepgram does the same thing through `smart_format=true`, which the runner leaves on because it is the documented default posture for production use.
+- **No number-word normalization.** Whisper-family models normalize "двадцать" → "20", but our reference text keeps "двадцати". On digit-heavy samples this inflates WER artificially by 5-15 points. We mitigated by reporting "WER clean" without those samples; for "WER full" see `results/consolidated.json`. Deepgram writes numbers as digits too — on Russian it does so regardless of `smart_format`, so the flag is not the cause and turning it off does not help.
+- **Deepgram runs with `smart_format=true`, which costs it ~3 points on English.** This is a deliberate choice (it is the vendor's production default), not a neutral one, and unlike the digit artifact above it is *not* absorbed by the clean subset — see finding #8. Numbers for the flag turned off are quoted there; they are not in `results/consolidated.json`, which only holds the `smart_format=on` sweep.
 - **Cloud rate limits and prices differ per provider.** The bench sleeps `--cloud-sleep-s` before each cloud request; 4 s is needed for the Groq free tier, 0.5 s is plenty for Deepgram (50 concurrent REST requests) and Fish Audio.
 - **T-one is out-of-domain on wideband audio.** T-one is a streaming CTC model explicitly trained for telephony (8 kHz narrowband). Our pipeline feeds it 48 kHz `.m4a` files (which its internal `miniaudio` decoder downsamples to 8 kHz, or fails to decode entirely depending on format). It produces poor WER on this benchmark because the clean iPhone audio is completely out of its training distribution. This is a deliberate inclusion to show domain mismatch, not a model bug.
 - **RAM measurement is unreliable for mlx-whisper.** mlx uses memory-mapped weights; our peak RSS sampler only sees anonymous pages. Real per-model RAM is likely 1.5-2× higher than reported.

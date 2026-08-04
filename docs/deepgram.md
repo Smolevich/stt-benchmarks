@@ -56,9 +56,26 @@ The fixed-language behaviour comes from the optional `language_override` field o
   single-speaker and diarization would only add latency.
 - **Transcript path**: `response["results"]["channels"][0]["alternatives"][0]["transcript"]`.
   The runner returns `""` when either list is empty instead of raising.
-- `smart_format` renders spoken numbers as digits ("двадцати" → "20"), the same
-  normalization artifact Whisper has. It inflates WER on the `*-04-digits` samples, which is
-  exactly why the README reports "WER clean" without them.
+- **`smart_format` is not free, and not what it looks like.** Measured A/B on the live set,
+  3 runs, clean subset:
+
+  | Model | EN clean, `smart_format=on` | off | delta |
+  |---|---|---|---|
+  | `deepgram-nova-3-multi` | 17.91% | **14.58%** | −3.33 pp |
+  | `deepgram-nova-2` | 18.51% | 15.69% | −2.81 pp |
+  | `deepgram-nova-3` (`language=en`) | 20.87% | 20.66% | −0.21 pp |
+
+  On **Russian the flag makes no difference at all** — on `ru-04-digits` the transcript is
+  byte-identical with it on and off, at 80.0% WER either way for Nova-3. Deepgram renders
+  Russian numbers as digits regardless of the flag, so this is a property of the model, not
+  of `smart_format`, and the `*-04-digits` / `*-07-names` exclusion already absorbs it.
+
+  The English penalty is a different story: it is ~3 points and it lands on the *clean*
+  subset, so it is not filtered out. The runner keeps `smart_format=true` because it is the
+  vendor's documented production posture, but that choice costs Deepgram a place in the
+  English ranking — with it off, `deepgram-nova-3-multi` at 14.58% moves ahead of Fish Audio
+  (14.96%). Flip it if your downstream consumer does its own formatting.
+  Only the `smart_format=on` sweep is committed to `results/`.
 - Rate limits are generous (50 concurrent REST requests on pay-as-you-go), so
   `--cloud-sleep-s 0.5` is plenty — no need for the 4 s Groq free-tier pause.
 
