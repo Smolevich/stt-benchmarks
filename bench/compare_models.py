@@ -26,14 +26,22 @@ CONSOLIDATED = ROOT / "results" / "consolidated.json"
 STRESS = ("-04-digits", "-07-names")
 
 
-def load(language: str, audio_set: str, include_stress: bool) -> tuple[dict, int]:
-    """{model_id: {sample_id: (reference, hypothesis)}} + сколько прогонов разошлось."""
-    runs = json.loads(CONSOLIDATED.read_text())["runs_detail"]
+def load(language: str, audio_set: str, include_stress: bool,
+         results: Path | None = None) -> tuple[dict, int]:
+    """{model_id: {sample_id: (reference, hypothesis)}} + сколько прогонов разошлось.
+
+    results — любой файл прогона той же схемы; по умолчанию сводный. Отдельные
+    прогоны НЕ сливаем в consolidated.json: там живой набор из личных голосовых, и
+    подмешивать к нему открытые данные значило бы получить сводку, которую нельзя
+    интерпретировать (об этом же предупреждает README про смешивание сводок)."""
+    runs = json.loads((results or CONSOLIDATED).read_text())["runs_detail"]
     grouped: dict[str, dict[str, list[dict]]] = defaultdict(lambda: defaultdict(list))
     for r in runs:
         sid = r.get("sample_id", "")
         current_set = sid.split("__", 1)[1] if "__" in sid else "live"
-        if current_set != audio_set or r.get("language") != language:
+        if audio_set != "any" and current_set != audio_set:
+            continue
+        if r.get("language") != language:
             continue
         if not include_stress and any(m in sid for m in STRESS):
             continue
@@ -124,14 +132,17 @@ def main() -> None:
     ap.add_argument("--a", help="базовая модель")
     ap.add_argument("--b", help="сравниваемая модель")
     ap.add_argument("--language", default="ru", choices=("ru", "en"))
-    ap.add_argument("--audio-set", default="live")
+    ap.add_argument("--audio-set", default="live", help="live | any | <tts set id>")
+    ap.add_argument("--results", type=Path, default=None,
+                    help="файл прогона; по умолчанию results/consolidated.json")
     ap.add_argument("--include-stress", action="store_true")
     ap.add_argument("--raw", action="store_true",
                     help="считать по сырому тексту, без семантической нормализации")
     ap.add_argument("--rank", action="store_true", help="таблица всех моделей по pooled WER")
     args = ap.parse_args()
 
-    models, disagreements = load(args.language, args.audio_set, args.include_stress)
+    models, disagreements = load(args.language, args.audio_set, args.include_stress,
+                                 args.results)
     if not models:
         raise SystemExit("нет подходящих записей")
     if disagreements:

@@ -1,0 +1,605 @@
+{
+  "notes": "Импортировано из google/fleurs (en_us, сплит test) скриптом bench/import_hf_samples.py. Эталон — поле transcription датасета, не вычитывался вручную.",
+  "samples": [
+    {
+      "id": "en-fleurs_en-001",
+      "language": "en",
+      "path": "samples/audio/fleurs_en/en-fleurs_en-001.wav",
+      "text": "however due to the slow communication channels styles in the west could lag behind by 25 to 30 year"
+    },
+    {
+      "id": "en-fleurs_en-002",
+      "language": "en",
+      "path": "samples/audio/fleurs_en/en-fleurs_en-002.wav",
+      "text": "all nouns alongside the word sie for you always begin with a capital letter even in the middle of a sentence"
+    },
+    {
+      "id": "en-fleurs_en-003",
+      "language": "en",
+      "path": "samples/audio/fleurs_en/en-fleurs_en-003.wav",
+      "text": "to the north and within easy reach is the romantic and fascinating town of sintra and which was made famous to foreigners after a glowing account of its splendours recorded by lord byron"
+    },
+    {
+      "id": "en-fleurs_en-004",
+      "language": "en",
+      "path": "samples/audio/fleurs_en/en-fleurs_en-004.wav",
+      "text": "the cabbage juice changes color depending on how acidic or basic alkaline the chemical is"
+    },
+    {
+      "id": "en-fleurs_en-005",
+      "language": "en",
+      "path": "samples/audio/fleurs_en/en-fleurs_en-005.wav",
+      "text": "the hospital has followed protocol for infection control including separating the patient from others to prevent possible infection of others"
+    },
+    {
+      "id": "en-fleurs_en-006",
+      "language": "en",
+      "path": "samples/audio/fleurs_en/en-fleurs_en-006.wav",
+      "text": "the northern marianas emergency management office said that there were no damages reported in the nation"
+    },
+    {
+      "id": "en-fleurs_en-007",
+      "language": "en",
+      "path": "samples/audio/fleurs_en/en-fleurs_en-007.wav",
+      "text": "twentieth century research has shown that there are two pools of genetic variation hidden and expressed"
+    },
+    {
+      "id": "en-fleurs_en-008",
+      "language": "en",
+      "path": "samples/audio/fleurs_en/en-fleurs_en-008.wav",
+      "text": "as light pollution in their heyday was not the kind of problem it is today they are usually located in cities or at campuses easier to reach than those built in modern times"
+    },
+    {
+      "id": "en-fleurs_en-009",
+      "language": "en",
+      "path": "samples/audio/fleurs_en/en-fleurs_en-009.wav",
+      "text": "through the night between 150 and 200 copies were made now known as dunlap broadsides"
+    },
+    {
+      "id": "en-fleurs_en-010",
+      "language": "en",
+      "path": "samples/audio/fleurs_en/en-fleurs_en-010.wav",
+      "text": "for example each year students from bennet school in north carolina design a website about their trip to the state capital each year the website gets remodeled but old versions are kept online to serve as a scrapbook"
+    },
+    {
+      "id": "en-fleurs_en-011",
+      "language": "en",
+      "path": "samples/audio/fleurs_en/en-fleurs_en-011.wav",
+      "text": "lion prides act much like packs of wolves or dogs animals surprisingly similar to lions but not other big cats in behavior and also very deadly to their prey"
+    },
+    {
+      "id": "en-fleurs_en-012",
+      "language": "en",
+      "path": "samples/audio/fleurs_en/en-fleurs_en-012.wav",
+      "text": "the city is also the base to climb the nyiragongo volcano along with some of the cheapest mountain gorilla tracking in africa"
+    },
+    {
+      "id": "en-fleurs_en-013",
+      "language": "en",
+      "path": "samples/audio/fleurs_en/en-fleurs_en-013.wav",
+      "text": "the internet combines elements of both mass and interpersonal communication"
+    },
+    {
+      "id": "en-fleurs_en-014",
+      "language": "en",
+      "path": "samples/audio/fleurs_en/en-fleurs_en-014.wav",
+      "text": "these theories look at what it is about certain people that make them want the things that they do and what things in their environment will make them do or not do certain things"
+    },
+    {
+      "id": "en-fleurs_en-015",
+      "language": "en",
+      "path": "samples/audio/fleurs_en/en-fleurs_en-015.wav",
+      "text": "for example the most common still image photography format in the world is 35mm which was the dominant film size at the close of the analog film era"
+    },
+    {
+      "id": "en-fleurs_en-016",
+      "language": "en",
+      "path": "samples/audio/fleurs_en/en-fleurs_en-016.wav",
+      "text": "the term safari in popular use refers to overland travel to view the stunning african wildlife particularly on savanna"
+    },
+    {
+      "id": "en-fleurs_en-017",
+      "language": "en",
+      "path": "samples/audio/fleurs_en/en-fleurs_en-017.wav",
+      "text": "but there are a lot of things about birds that still look like a dinosaur"
+    },
+    {
+      "id": "en-fleurs_en-018",
+      "language": "en",
+      "path": "samples/audio/fleurs_en/en-fleurs_en-018.wav",
+      "text": "women it is recommended that any women travellers say that they are married regardless of actual marital status"
+    },
+    {
+      "id": "en-fleurs_en-019",
+      "language": "en",
+      "path": "samples/audio/fleurs_en/en-fleurs_en-019.wav",
+      "text": "in some areas boiling water for a minute is enough in others several minutes are needed"
+    },
+    {
+      "id": "en-fleurs_en-020",
+      "language": "en",
+      "path": "samples/audio/fleurs_en/en-fleurs_en-020.wav",
+      "text": "as a result two fish species have become extinct and two others have become endangered including the humpback chub"
+    },
+    {
+      "id": "en-fleurs_en-021",
+      "language": "en",
+      "path": "samples/audio/fleurs_en/en-fleurs_en-021.wav",
+      "text": "it was ruled by the vichy french these were french people who had made peace with the germans in 1940 and worked with the invaders instead of fighting them"
+    },
+    {
+      "id": "en-fleurs_en-022",
+      "language": "en",
+      "path": "samples/audio/fleurs_en/en-fleurs_en-022.wav",
+      "text": "on 15 august 1940 the allies invaded southern france the invasion was called operation dragoon"
+    },
+    {
+      "id": "en-fleurs_en-023",
+      "language": "en",
+      "path": "samples/audio/fleurs_en/en-fleurs_en-023.wav",
+      "text": "for example each year students from bennet school in north carolina design a website about their trip to the state capital each year the website gets remodeled but old versions are kept online to serve as a scrapbook"
+    },
+    {
+      "id": "en-fleurs_en-024",
+      "language": "en",
+      "path": "samples/audio/fleurs_en/en-fleurs_en-024.wav",
+      "text": "his work is of such recognized quality and detail that he is one of the very few household names among philatelists some specialize in collecting his work alone"
+    },
+    {
+      "id": "en-fleurs_en-025",
+      "language": "en",
+      "path": "samples/audio/fleurs_en/en-fleurs_en-025.wav",
+      "text": "danielle lantagne a un expert on the disease stated the outbreak was likely caused by the peacekeepers"
+    },
+    {
+      "id": "en-fleurs_en-026",
+      "language": "en",
+      "path": "samples/audio/fleurs_en/en-fleurs_en-026.wav",
+      "text": "the other nominations include best picture director cinematography costume design film-editing original score production design sound editing sound mixing and original screenplay"
+    },
+    {
+      "id": "en-fleurs_en-027",
+      "language": "en",
+      "path": "samples/audio/fleurs_en/en-fleurs_en-027.wav",
+      "text": "virtual teams are held to the same standards of excellence as conventional teams but there are subtle differences"
+    },
+    {
+      "id": "en-fleurs_en-028",
+      "language": "en",
+      "path": "samples/audio/fleurs_en/en-fleurs_en-028.wav",
+      "text": "in the north the region is bounded by the sahel and in the south and west by the atlantic ocean"
+    },
+    {
+      "id": "en-fleurs_en-029",
+      "language": "en",
+      "path": "samples/audio/fleurs_en/en-fleurs_en-029.wav",
+      "text": "a well rounded athlete the tiger can climb though not well swim leap great distances and pull with five times the force of a strong human"
+    },
+    {
+      "id": "en-fleurs_en-030",
+      "language": "en",
+      "path": "samples/audio/fleurs_en/en-fleurs_en-030.wav",
+      "text": "the pyramid sound and light show is one of the most interesting things in the area for kids"
+    },
+    {
+      "id": "en-fleurs_en-031",
+      "language": "en",
+      "path": "samples/audio/fleurs_en/en-fleurs_en-031.wav",
+      "text": "due to the underwater topology the return flow is concentrated at a few deeper sections and a fast current to deep water may form there"
+    },
+    {
+      "id": "en-fleurs_en-032",
+      "language": "en",
+      "path": "samples/audio/fleurs_en/en-fleurs_en-032.wav",
+      "text": "the crash occurred high up in mountainous terrain and is believed to have been the result of hostile fire"
+    },
+    {
+      "id": "en-fleurs_en-033",
+      "language": "en",
+      "path": "samples/audio/fleurs_en/en-fleurs_en-033.wav",
+      "text": "blogs can also help improve student writing while students often begin their blog experience with sloppy grammar and spelling the presence of an audience generally changes that"
+    },
+    {
+      "id": "en-fleurs_en-034",
+      "language": "en",
+      "path": "samples/audio/fleurs_en/en-fleurs_en-034.wav",
+      "text": "this is an important way to distinguish between some verbs and objects"
+    },
+    {
+      "id": "en-fleurs_en-035",
+      "language": "en",
+      "path": "samples/audio/fleurs_en/en-fleurs_en-035.wav",
+      "text": "as a result two fish species have become extinct and two others have become endangered including the humpback chub"
+    },
+    {
+      "id": "en-fleurs_en-036",
+      "language": "en",
+      "path": "samples/audio/fleurs_en/en-fleurs_en-036.wav",
+      "text": "but there are a lot of things about birds that still look like a dinosaur"
+    },
+    {
+      "id": "en-fleurs_en-037",
+      "language": "en",
+      "path": "samples/audio/fleurs_en/en-fleurs_en-037.wav",
+      "text": "goats seem to have been first domesticated roughly 10,000 years ago in the zagros mountains of iran"
+    },
+    {
+      "id": "en-fleurs_en-038",
+      "language": "en",
+      "path": "samples/audio/fleurs_en/en-fleurs_en-038.wav",
+      "text": "travellers are strongly advised to be aware of any risk of severe weather affecting their area as they may affect any travel plans"
+    },
+    {
+      "id": "en-fleurs_en-039",
+      "language": "en",
+      "path": "samples/audio/fleurs_en/en-fleurs_en-039.wav",
+      "text": "during this period of european history the catholic church which had become rich and powerful came under scrutiny"
+    },
+    {
+      "id": "en-fleurs_en-040",
+      "language": "en",
+      "path": "samples/audio/fleurs_en/en-fleurs_en-040.wav",
+      "text": "as knowledge of greek declined the west found itself cut off from its greek philosophical and scientific roots"
+    },
+    {
+      "id": "en-fleurs_en-041",
+      "language": "en",
+      "path": "samples/audio/fleurs_en/en-fleurs_en-041.wav",
+      "text": "last week meti announced that apple had informed it of 34 additional overheating incidents which the company called non-serious"
+    },
+    {
+      "id": "en-fleurs_en-042",
+      "language": "en",
+      "path": "samples/audio/fleurs_en/en-fleurs_en-042.wav",
+      "text": "mrs kirchner announced her intention to run for president at the argentine theatre the same location she used to start her 2005 campaign for the senate as member of the buenos aires province delegation"
+    },
+    {
+      "id": "en-fleurs_en-043",
+      "language": "en",
+      "path": "samples/audio/fleurs_en/en-fleurs_en-043.wav",
+      "text": "the hot chocolate is up to belgian standards fruit juices are pricey but excellent"
+    },
+    {
+      "id": "en-fleurs_en-044",
+      "language": "en",
+      "path": "samples/audio/fleurs_en/en-fleurs_en-044.wav",
+      "text": "the harbor was the site of an infamous naval standoff in 1889 when seven ships from germany the us and britain refused to leave the harbor"
+    },
+    {
+      "id": "en-fleurs_en-045",
+      "language": "en",
+      "path": "samples/audio/fleurs_en/en-fleurs_en-045.wav",
+      "text": "built by the egyptians in the third century bce the great pyramid is one of many large pyramid structures built to honor dead pharaoh"
+    },
+    {
+      "id": "en-fleurs_en-046",
+      "language": "en",
+      "path": "samples/audio/fleurs_en/en-fleurs_en-046.wav",
+      "text": "a civilization is a singular culture shared by a significant large group of people who live and work co-operatively a society"
+    },
+    {
+      "id": "en-fleurs_en-047",
+      "language": "en",
+      "path": "samples/audio/fleurs_en/en-fleurs_en-047.wav",
+      "text": "to the north and within easy reach is the romantic and fascinating town of sintra and which was made famous to foreigners after a glowing account of its splendours recorded by lord byron"
+    },
+    {
+      "id": "en-fleurs_en-048",
+      "language": "en",
+      "path": "samples/audio/fleurs_en/en-fleurs_en-048.wav",
+      "text": "lion prides act much like packs of wolves or dogs animals surprisingly similar to lions but not other big cats in behavior and also very deadly to their prey"
+    },
+    {
+      "id": "en-fleurs_en-049",
+      "language": "en",
+      "path": "samples/audio/fleurs_en/en-fleurs_en-049.wav",
+      "text": "scientists hope to understand how planets form especially how the earth formed since comets collided with the earth long ago"
+    },
+    {
+      "id": "en-fleurs_en-050",
+      "language": "en",
+      "path": "samples/audio/fleurs_en/en-fleurs_en-050.wav",
+      "text": "most modern research telescopes are enormous facilities in remote areas with favorable atmospheric conditions"
+    },
+    {
+      "id": "en-fleurs_en-051",
+      "language": "en",
+      "path": "samples/audio/fleurs_en/en-fleurs_en-051.wav",
+      "text": "if you have watched the movie national treasure you may think a treasure map was written on the back of the declaration of independence"
+    },
+    {
+      "id": "en-fleurs_en-052",
+      "language": "en",
+      "path": "samples/audio/fleurs_en/en-fleurs_en-052.wav",
+      "text": "the sundarbans are the largest littoral mangrove belt in the world stretching 80 km 50 mi into the bangladeshi and indian hinterland from the coast"
+    },
+    {
+      "id": "en-fleurs_en-053",
+      "language": "en",
+      "path": "samples/audio/fleurs_en/en-fleurs_en-053.wav",
+      "text": "hydrogen ions are protons that had their electrons stripped off them since hydrogen atoms consist of one proton and one electron"
+    },
+    {
+      "id": "en-fleurs_en-054",
+      "language": "en",
+      "path": "samples/audio/fleurs_en/en-fleurs_en-054.wav",
+      "text": "the sundarbans are the largest littoral mangrove belt in the world stretching 80 km 50 mi into the bangladeshi and indian hinterland from the coast"
+    },
+    {
+      "id": "en-fleurs_en-055",
+      "language": "en",
+      "path": "samples/audio/fleurs_en/en-fleurs_en-055.wav",
+      "text": "throughout 1960s brzezinski worked for john f kennedy as his advisor and then the lyndon b johnson administration"
+    },
+    {
+      "id": "en-fleurs_en-056",
+      "language": "en",
+      "path": "samples/audio/fleurs_en/en-fleurs_en-056.wav",
+      "text": "cuomo 53 began his governorship earlier this year and signed a bill last month legalizing same-sex marriage"
+    },
+    {
+      "id": "en-fleurs_en-057",
+      "language": "en",
+      "path": "samples/audio/fleurs_en/en-fleurs_en-057.wav",
+      "text": "television reports show white smoke coming from the plant"
+    },
+    {
+      "id": "en-fleurs_en-058",
+      "language": "en",
+      "path": "samples/audio/fleurs_en/en-fleurs_en-058.wav",
+      "text": "nothing can be seen other than the clear beautiful sky above and the many surrounding mountains very little of this world can be seen or heard from inside the cave"
+    },
+    {
+      "id": "en-fleurs_en-059",
+      "language": "en",
+      "path": "samples/audio/fleurs_en/en-fleurs_en-059.wav",
+      "text": "first most riders wear riding boots with a heel and a smooth quite narrow sole"
+    },
+    {
+      "id": "en-fleurs_en-060",
+      "language": "en",
+      "path": "samples/audio/fleurs_en/en-fleurs_en-060.wav",
+      "text": "since 1966 the sundarbans have been a wildlife sanctuary and it is estimated that there are now 400 royal bengal tigers and about 30,000 spotted deer in the area"
+    },
+    {
+      "id": "en-fleurs_en-061",
+      "language": "en",
+      "path": "samples/audio/fleurs_en/en-fleurs_en-061.wav",
+      "text": "the plitvice lakes national park is heavily forested mainly with beech spruce and fir trees and features a mixture of alpine and mediterranean vegetation"
+    },
+    {
+      "id": "en-fleurs_en-062",
+      "language": "en",
+      "path": "samples/audio/fleurs_en/en-fleurs_en-062.wav",
+      "text": "also after the revolution occupations were open to all male applicants allowing the most ambitious and successful to succeed"
+    },
+    {
+      "id": "en-fleurs_en-063",
+      "language": "en",
+      "path": "samples/audio/fleurs_en/en-fleurs_en-063.wav",
+      "text": "the scenes are displayed on the pyramids and the different pyramids are lit up"
+    },
+    {
+      "id": "en-fleurs_en-064",
+      "language": "en",
+      "path": "samples/audio/fleurs_en/en-fleurs_en-064.wav",
+      "text": "these couples may choose to make an adoption plan for their baby"
+    },
+    {
+      "id": "en-fleurs_en-065",
+      "language": "en",
+      "path": "samples/audio/fleurs_en/en-fleurs_en-065.wav",
+      "text": "similarly by having a schengen visa you do not need to apply for visas to each of the schengen member countries separately hence saving time money and paperwork"
+    },
+    {
+      "id": "en-fleurs_en-066",
+      "language": "en",
+      "path": "samples/audio/fleurs_en/en-fleurs_en-066.wav",
+      "text": "everything in the universe is made of matter all matter is made of tiny particles called atoms"
+    },
+    {
+      "id": "en-fleurs_en-067",
+      "language": "en",
+      "path": "samples/audio/fleurs_en/en-fleurs_en-067.wav",
+      "text": "the find also grants insight into the evolution of feathers in birds"
+    },
+    {
+      "id": "en-fleurs_en-068",
+      "language": "en",
+      "path": "samples/audio/fleurs_en/en-fleurs_en-068.wav",
+      "text": "the moisture on your hands will react with the outer layers which will feel funny and form a sort of shell"
+    },
+    {
+      "id": "en-fleurs_en-069",
+      "language": "en",
+      "path": "samples/audio/fleurs_en/en-fleurs_en-069.wav",
+      "text": "only mutations in germ-line cells can be passed on to children while mutations elsewhere can cause cell-death or cancer"
+    },
+    {
+      "id": "en-fleurs_en-070",
+      "language": "en",
+      "path": "samples/audio/fleurs_en/en-fleurs_en-070.wav",
+      "text": "in its early days the show was featured solely at the long-running internet radio site toginet radio a site focused on talk radio"
+    },
+    {
+      "id": "en-fleurs_en-071",
+      "language": "en",
+      "path": "samples/audio/fleurs_en/en-fleurs_en-071.wav",
+      "text": "the giza plateau or giza necropolis in the egyptian valley of the dead contains several pyramids of which the great pyramid is the largest several small tombs several temples and the great sphinx"
+    },
+    {
+      "id": "en-fleurs_en-072",
+      "language": "en",
+      "path": "samples/audio/fleurs_en/en-fleurs_en-072.wav",
+      "text": "these couples may choose to make an adoption plan for their baby"
+    },
+    {
+      "id": "en-fleurs_en-073",
+      "language": "en",
+      "path": "samples/audio/fleurs_en/en-fleurs_en-073.wav",
+      "text": "usa gymnastics and the usoc have the same goal making the sport of gymnastics and others as safe as possible for athletes to follow their dreams in a safe positive and empowered environment"
+    },
+    {
+      "id": "en-fleurs_en-074",
+      "language": "en",
+      "path": "samples/audio/fleurs_en/en-fleurs_en-074.wav",
+      "text": "ms is a disease that affects the central nervous system which is made up of the brain the spinal cord and the optic nerve"
+    },
+    {
+      "id": "en-fleurs_en-075",
+      "language": "en",
+      "path": "samples/audio/fleurs_en/en-fleurs_en-075.wav",
+      "text": "sharing a field trip virtually is also a great way to reflect a on a trip and share experiences with future classes"
+    },
+    {
+      "id": "en-fleurs_en-076",
+      "language": "en",
+      "path": "samples/audio/fleurs_en/en-fleurs_en-076.wav",
+      "text": "everyone participates in society and uses transportation systems almost everyone complains about transportation systems"
+    },
+    {
+      "id": "en-fleurs_en-077",
+      "language": "en",
+      "path": "samples/audio/fleurs_en/en-fleurs_en-077.wav",
+      "text": "on some routes the larger companies have their own planes but for other routes and smaller firms there was a problem"
+    },
+    {
+      "id": "en-fleurs_en-078",
+      "language": "en",
+      "path": "samples/audio/fleurs_en/en-fleurs_en-078.wav",
+      "text": "the parade of buildings that make the hong kong skyline has been likened to a glittering bar chart that is made apparent by the presence of the waters of victoria harbour"
+    },
+    {
+      "id": "en-fleurs_en-079",
+      "language": "en",
+      "path": "samples/audio/fleurs_en/en-fleurs_en-079.wav",
+      "text": "it states that the most effective place for the main subject is at the intersection of lines dividing the image into thirds vertically and horizontally see example"
+    },
+    {
+      "id": "en-fleurs_en-080",
+      "language": "en",
+      "path": "samples/audio/fleurs_en/en-fleurs_en-080.wav",
+      "text": "cuomo 53 began his governorship earlier this year and signed a bill last month legalizing same-sex marriage"
+    },
+    {
+      "id": "en-fleurs_en-081",
+      "language": "en",
+      "path": "samples/audio/fleurs_en/en-fleurs_en-081.wav",
+      "text": "it may also be beneficial for one to buy a wild card which provides entry to either selections of parks in south africa or all of the south african national parks"
+    },
+    {
+      "id": "en-fleurs_en-082",
+      "language": "en",
+      "path": "samples/audio/fleurs_en/en-fleurs_en-082.wav",
+      "text": "the same month saw another airliner overrun a runway at mashhad and strike a wall killing seventeen"
+    },
+    {
+      "id": "en-fleurs_en-083",
+      "language": "en",
+      "path": "samples/audio/fleurs_en/en-fleurs_en-083.wav",
+      "text": "the find also grants insight into the evolution of feathers in birds"
+    },
+    {
+      "id": "en-fleurs_en-084",
+      "language": "en",
+      "path": "samples/audio/fleurs_en/en-fleurs_en-084.wav",
+      "text": "mosasaurus was the apex predator of its time so it feared nothing except other mosasaurs"
+    },
+    {
+      "id": "en-fleurs_en-085",
+      "language": "en",
+      "path": "samples/audio/fleurs_en/en-fleurs_en-085.wav",
+      "text": "six hostages including the children and elderly were released early as were the filipino photographers"
+    },
+    {
+      "id": "en-fleurs_en-086",
+      "language": "en",
+      "path": "samples/audio/fleurs_en/en-fleurs_en-086.wav",
+      "text": "plants make oxygen which humans breathe and they take in carbon-dioxide which humans exhale that is breathe out"
+    },
+    {
+      "id": "en-fleurs_en-087",
+      "language": "en",
+      "path": "samples/audio/fleurs_en/en-fleurs_en-087.wav",
+      "text": "the correlation between brain pathology and behaviour supports scientists in their research"
+    },
+    {
+      "id": "en-fleurs_en-088",
+      "language": "en",
+      "path": "samples/audio/fleurs_en/en-fleurs_en-088.wav",
+      "text": "the announcement was made after trump had a phone conversation with turkish president recep tayyip erdoğan"
+    },
+    {
+      "id": "en-fleurs_en-089",
+      "language": "en",
+      "path": "samples/audio/fleurs_en/en-fleurs_en-089.wav",
+      "text": "similarly by having a schengen visa you do not need to apply for visas to each of the schengen member countries separately hence saving time money and paperwork"
+    },
+    {
+      "id": "en-fleurs_en-090",
+      "language": "en",
+      "path": "samples/audio/fleurs_en/en-fleurs_en-090.wav",
+      "text": "italian is also the everyday language used by most of those who work in the state while latin is often used in religious ceremonies"
+    },
+    {
+      "id": "en-fleurs_en-091",
+      "language": "en",
+      "path": "samples/audio/fleurs_en/en-fleurs_en-091.wav",
+      "text": "unfortunately studying traffic flow is difficult because driver behavior cannot be predicted with one-hundred percent certainty"
+    },
+    {
+      "id": "en-fleurs_en-092",
+      "language": "en",
+      "path": "samples/audio/fleurs_en/en-fleurs_en-092.wav",
+      "text": "romanticism had a large element of cultural determinism drawn from writers such as goethe fichte and schlegel"
+    },
+    {
+      "id": "en-fleurs_en-093",
+      "language": "en",
+      "path": "samples/audio/fleurs_en/en-fleurs_en-093.wav",
+      "text": "a well rounded athlete the tiger can climb though not well swim leap great distances and pull with five times the force of a strong human"
+    },
+    {
+      "id": "en-fleurs_en-094",
+      "language": "en",
+      "path": "samples/audio/fleurs_en/en-fleurs_en-094.wav",
+      "text": "congress began funding the obscenity initiative in fiscal 2005 and specified that the fbi must devote 10 agents to adult pornography"
+    },
+    {
+      "id": "en-fleurs_en-095",
+      "language": "en",
+      "path": "samples/audio/fleurs_en/en-fleurs_en-095.wav",
+      "text": "it has brought us the train the car and many other transportation devices"
+    },
+    {
+      "id": "en-fleurs_en-096",
+      "language": "en",
+      "path": "samples/audio/fleurs_en/en-fleurs_en-096.wav",
+      "text": "with two years of the end of the war the former allies were now enemies and the cold war began"
+    },
+    {
+      "id": "en-fleurs_en-097",
+      "language": "en",
+      "path": "samples/audio/fleurs_en/en-fleurs_en-097.wav",
+      "text": "late on sunday the united states president donald trump in a statement delivered via the press secretary announced us troops would be leaving syria"
+    },
+    {
+      "id": "en-fleurs_en-098",
+      "language": "en",
+      "path": "samples/audio/fleurs_en/en-fleurs_en-098.wav",
+      "text": "in a carriage they traveled back to paris surrounded by a mob of people screaming and shouting threats against the king and queen"
+    },
+    {
+      "id": "en-fleurs_en-099",
+      "language": "en",
+      "path": "samples/audio/fleurs_en/en-fleurs_en-099.wav",
+      "text": "while goma is reasonably safe any visits outside of goma should be researched to understand the state of the fighting that persists in the north kivu province"
+    },
+    {
+      "id": "en-fleurs_en-100",
+      "language": "en",
+      "path": "samples/audio/fleurs_en/en-fleurs_en-100.wav",
+      "text": "if you have watched the movie national treasure you may think a treasure map was written on the back of the declaration of independence"
+    }
+  ]
+}
