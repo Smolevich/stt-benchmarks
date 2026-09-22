@@ -57,29 +57,17 @@ def is_clean_sample(row: dict[str, Any]) -> bool:
     return not any(sample.endswith(suffix) for suffix in EXCLUDE_CLEAN_SUFFIXES)
 
 
-def is_vendor_self_bias(model_id: str, tts_provider: object) -> bool:
-    """STT слушает TTS того же вендора — число считаем, но верить ему нельзя.
-
-    Выводится из данных, а не проставляется руками: id моделей в реестре начинаются
-    с имени провайдера, и старые прогоны получают флаг без перезапуска.
-    """
-    provider = str(tts_provider or "").strip().lower()
-    return bool(provider) and model_id.lower().startswith(provider)
-
-
 def summarize(runs: list[dict[str, Any]]) -> list[dict[str, Any]]:
-    # Уровень шума — отдельная строка, а не слагаемое среднего: смысл набора как раз
-    # в том, насколько модель просаживается от чистой записи к шумной.
-    grouped: dict[tuple[str, str, str, str], list[dict[str, Any]]] = defaultdict(list)
+    grouped: dict[tuple[str, str, str], list[dict[str, Any]]] = defaultdict(list)
     for row in runs:
         language = str(row.get("language") or "unknown")
         if language == "all":
             continue
         audio_set = str(row.get("audio_set_id") or "live")
-        grouped[(audio_set, language, str(row["model_id"]), str(row.get("noise_level") or ""))].append(row)
+        grouped[(audio_set, language, str(row["model_id"]))].append(row)
 
     rows = []
-    for (audio_set, language, model_id, _noise_level), group in grouped.items():
+    for (audio_set, language, model_id), group in grouped.items():
         # Skip language-incompatible models — they produce 100% WER and add no signal.
         supported_lang = LANGUAGE_ONLY.get(model_id)
         if supported_lang is not None and language != supported_lang:
@@ -99,8 +87,6 @@ def summarize(runs: list[dict[str, Any]]) -> list[dict[str, Any]]:
                 "tts_model": first.get("tts_model", ""),
                 "tts_voice": first.get("tts_voice", ""),
                 "condition": first.get("condition", ""),
-                "noise_level": first.get("noise_level", ""),
-                "self_bias": is_vendor_self_bias(model_id, first.get("tts_provider")),
                 "sample_count": len({row.get("sample_id") for row in group}),
                 "run_count": len(group),
                 "median_latency_per_10s": median(latencies),
@@ -135,8 +121,6 @@ def table(rows: list[dict[str, Any]], title: str) -> str:
         f"<td>{esc(row['audio_set_id'])}</td>"
         f"<td>{esc(row['language'])}</td>"
         f"<td>{esc(row['model_id'])}</td>"
-        f"<td>{esc(row.get('noise_level') or '—')}</td>"
-        f"<td>{'⚠ vendor' if row.get('self_bias') else '—'}</td>"
         f"<td class='col-acc'>{esc(row.get('tts_provider') or '—')}</td>"
         f"<td class='col-acc'>{esc(row.get('tts_model') or '—')}</td>"
         f"<td class='col-acc'>{esc(row.get('tts_voice') or '—')}</td>"
@@ -159,8 +143,6 @@ def table(rows: list[dict[str, Any]], title: str) -> str:
           <th>Audio set</th>
           <th>Lang</th>
           <th>STT model</th>
-          <th>Noise</th>
-          <th>Self-bias</th>
           <th class="col-acc">TTS provider</th>
           <th class="col-acc">TTS model</th>
           <th class="col-acc">Voice</th>
@@ -301,7 +283,7 @@ def build_html(synthetic_rows: list[dict[str, Any]], live_rows: list[dict[str, A
   <main>
     <header>
       <h1>STT Benchmark Results</h1>
-      <p>Median WER/CER and latency grouped by audio set, language, noise level, and STT model. WER clean excludes the digits and proper-name stress samples. Live audio files are not published; synthetic ones are. <strong>Runs</strong> = (number of unique samples) × (repetitions). <strong>Self-bias</strong> marks rows where the STT vendor also generated the audio (e.g. ElevenLabs Scribe on ElevenLabs TTS) — the number is computed but must not be read as a fair comparison.</p>
+      <p>Median WER/CER and latency grouped by audio set, language, and STT model. WER clean excludes the digits and proper-name stress samples. Audio files are not published. <strong>Runs</strong> = (number of unique samples) × (repetitions).</p>
       <div class="meta">
         <span>Generated: {esc(generated_at)}</span>
         <span>Synthetic data: {esc(synthetic_created or "not available")}</span>

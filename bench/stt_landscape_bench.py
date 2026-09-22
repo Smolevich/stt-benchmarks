@@ -56,8 +56,6 @@ SAMPLE_METADATA_FIELDS = [
     "condition",
     "sample_rate_hz",
     "ambient",
-    "synthetic",
-    "noise_level",
 ]
 
 
@@ -117,15 +115,6 @@ MODEL_REGISTRY: dict[str, ModelSpec] = {
         languages="99",
         requires_env="GROQ_API_KEY",
         notes="Cloud API baseline used by the bot.",
-    ),
-    "groq-whisper-large-v3": ModelSpec(
-        id="groq-whisper-large-v3",
-        runner="groq",
-        model="whisper-large-v3",
-        arch="AR",
-        languages="99",
-        requires_env="GROQ_API_KEY",
-        notes="Полная Whisper large-v3 у того же провайдера — цена turbo за скорость.",
     ),
     "elevenlabs-scribe-v1": ModelSpec(
         id="elevenlabs-scribe-v1",
@@ -687,89 +676,63 @@ def benchmark_model(
     warmup: int,
     runs: int,
     cloud_sleep_s: float = 0.0,
-) -> tuple[list[dict[str, Any]], list[dict[str, Any]], list[dict[str, str]]]:
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
     transcribe = runner_cache.get(spec)
     run_rows: list[dict[str, Any]] = []
-    errors: list[dict[str, str]] = []
     is_cloud = spec.runner in {"groq", "elevenlabs", "fish_audio", "deepgram"}
     pause = cloud_sleep_s if is_cloud else 0.0
 
     for sample in samples:
-        try:
-            run_rows.extend(benchmark_sample(spec, sample, transcribe, warmup, runs, pause))
-        except Exception as exc:
-            # Язык, которого провайдер не знает, — отказ на одном сэмпле, а не на модели:
-            # иначе один армянский файл стирал бы и русские строки того же движка.
-            errors.append({"model_id": spec.id, "sample_id": str(sample["id"]), "error": str(exc)})
-            print(f"[error] {spec.id} {sample['id']}: {exc}", file=sys.stderr, flush=True)
+        for warmup_index in range(warmup):
+            if pause:
+                time.sleep(pause)
+            print(f"[warmup] {spec.id} {sample['id']} #{warmup_index + 1}", flush=True)
+            transcribe(sample["path"], sample["language"])
 
-    summary = summarize_model(spec, run_rows) if run_rows else []
-    return run_rows, summary, errors
+        for run_index in range(runs):
+            if pause:
+                time.sleep(pause)
+            print(f"[run] {spec.id} {sample['id']} #{run_index + 1}", flush=True)
+            gc.collect()
+            with PeakMemorySampler() as memory:
+                started = time.monotonic()
+                hypothesis = transcribe(sample["path"], sample["language"])
+                elapsed_s = time.monotonic() - started
 
+            duration_s = sample["duration_s"]
+            latency_per_10s = None
+            if duration_s and duration_s > 0:
+                latency_per_10s = elapsed_s / duration_s * 10
 
-def benchmark_sample(
-    spec: ModelSpec,
-    sample: dict[str, Any],
-    transcribe: Callable[[str, str], str],
-    warmup: int,
-    runs: int,
-    pause: float,
-) -> list[dict[str, Any]]:
-    """Прогоны одного сэмпла одной моделью; отказ провайдера пробрасывается наверх."""
-    run_rows: list[dict[str, Any]] = []
+            run_rows.append(
+                {
+                    "model_id": spec.id,
+                    "runner": spec.runner,
+                    "arch": spec.arch,
+                    "model": spec.model,
+                    "sample_id": sample["id"],
+                    "base_id": sample.get("base_id", sample["id"]),
+                    "audio_set_id": sample.get("audio_set_id"),
+                    "tts_provider": sample.get("tts_provider"),
+                    "tts_model": sample.get("tts_model"),
+                    "tts_voice": sample.get("tts_voice"),
+                    "condition": sample.get("condition"),
+                    "sample_rate_hz": sample.get("sample_rate_hz"),
+                    "ambient": sample.get("ambient"),
+                    "language": sample["language"],
+                    "duration_s": duration_s,
+                    "run_index": run_index + 1,
+                    "elapsed_s": round(elapsed_s, 4),
+                    "latency_per_10s": round(latency_per_10s, 4) if latency_per_10s else None,
+                    "wer_pct": pct(compute_wer(sample["text"], hypothesis)),
+                    "cer_pct": pct(compute_cer(sample["text"], hypothesis)),
+                    "peak_rss_mb": bytes_to_mb(memory.peak_bytes),
+                    "reference": sample["text"],
+                    "hypothesis": hypothesis,
+                }
+            )
 
-    for warmup_index in range(warmup):
-        if pause:
-            time.sleep(pause)
-        print(f"[warmup] {spec.id} {sample['id']} #{warmup_index + 1}", flush=True)
-        transcribe(sample["path"], sample["language"])
-
-    for run_index in range(runs):
-        if pause:
-            time.sleep(pause)
-        print(f"[run] {spec.id} {sample['id']} #{run_index + 1}", flush=True)
-        gc.collect()
-        with PeakMemorySampler() as memory:
-            started = time.monotonic()
-            hypothesis = transcribe(sample["path"], sample["language"])
-            elapsed_s = time.monotonic() - started
-
-        duration_s = sample["duration_s"]
-        latency_per_10s = None
-        if duration_s and duration_s > 0:
-            latency_per_10s = elapsed_s / duration_s * 10
-
-        run_rows.append(
-            {
-                "model_id": spec.id,
-                "runner": spec.runner,
-                "arch": spec.arch,
-                "model": spec.model,
-                "sample_id": sample["id"],
-                "base_id": sample.get("base_id", sample["id"]),
-                "audio_set_id": sample.get("audio_set_id"),
-                "tts_provider": sample.get("tts_provider"),
-                "tts_model": sample.get("tts_model"),
-                "tts_voice": sample.get("tts_voice"),
-                "condition": sample.get("condition"),
-                "sample_rate_hz": sample.get("sample_rate_hz"),
-                "ambient": sample.get("ambient"),
-                "synthetic": sample.get("synthetic"),
-                "noise_level": sample.get("noise_level"),
-                "language": sample["language"],
-                "duration_s": duration_s,
-                "run_index": run_index + 1,
-                "elapsed_s": round(elapsed_s, 4),
-                "latency_per_10s": round(latency_per_10s, 4) if latency_per_10s else None,
-                "wer_pct": pct(compute_wer(sample["text"], hypothesis)),
-                "cer_pct": pct(compute_cer(sample["text"], hypothesis)),
-                "peak_rss_mb": bytes_to_mb(memory.peak_bytes),
-                "reference": sample["text"],
-                "hypothesis": hypothesis,
-            }
-        )
-
-    return run_rows
+    return run_rows, summarize_model(spec, run_rows)
 
 
 def summarize_model(spec: ModelSpec, run_rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
@@ -901,7 +864,7 @@ def main() -> int:
 
     for spec in models:
         try:
-            model_run_rows, model_summary_rows, sample_errors = benchmark_model(
+            model_run_rows, model_summary_rows = benchmark_model(
                 spec=spec,
                 samples=samples,
                 runner_cache=runner_cache,
@@ -911,7 +874,6 @@ def main() -> int:
             )
             run_rows.extend(model_run_rows)
             summary_rows.extend(model_summary_rows)
-            errors.extend(sample_errors)
         except Exception as exc:
             errors.append({"model_id": spec.id, "error": str(exc)})
             print(f"[error] {spec.id}: {exc}", file=sys.stderr, flush=True)
@@ -950,8 +912,6 @@ def main() -> int:
             "condition",
             "sample_rate_hz",
             "ambient",
-            "synthetic",
-            "noise_level",
             "language",
             "duration_s",
             "run_index",
