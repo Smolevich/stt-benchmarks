@@ -79,14 +79,16 @@ def main() -> int:
 
     runs_list = list(runs.values())
 
-    by_key: dict[tuple[str, str, str], list[dict]] = defaultdict(list)
+    # Уровень шума не усредняем с чистой записью: просадка от шума и есть измеряемое.
+    by_key: dict[tuple[str, str, str, str], list[dict]] = defaultdict(list)
     for r in runs_list:
         audio_set_id = str(r.get("audio_set_id") or "live")
-        by_key[(r["model_id"], r["language"], audio_set_id)].append(r)
-        by_key[(r["model_id"], "all", audio_set_id)].append(r)
+        noise_level = str(r.get("noise_level") or "")
+        by_key[(r["model_id"], r["language"], audio_set_id, noise_level)].append(r)
+        by_key[(r["model_id"], "all", audio_set_id, noise_level)].append(r)
 
     summary = []
-    for (model_id, lang, audio_set_id), group in sorted(by_key.items()):
+    for (model_id, lang, audio_set_id, noise_level), group in sorted(by_key.items()):
         if not group:
             continue
         first = group[0]
@@ -97,6 +99,7 @@ def main() -> int:
             "arch": first["arch"],
             "language": lang,
             "audio_set_id": audio_set_id,
+            "noise_level": noise_level,
             "sample_count": len({r["sample_id"] for r in group}),
             "run_count": len(group),
             "median_elapsed_s": round(statistics.median([float(r["elapsed_s"]) for r in group]), 4),
@@ -135,11 +138,13 @@ def main() -> int:
     if errors:
         print(f"  {len(errors)} recorded model errors")
     print()
-    print(f'{"model":<30} {"lang":<5} {"set":<28} {"runs":>5} {"lat/10s":>8} {"WER%":>6} {"CER%":>6}')
-    print("-" * 100)
-    for row in sorted(summary, key=lambda x: (x["audio_set_id"], x["language"] != "all", x["language"], x["median_wer_pct"])):
+    print(f'{"model":<30} {"lang":<5} {"set":<28} {"noise":<9} {"runs":>5} {"lat/10s":>8} {"WER%":>6} {"CER%":>6}')
+    print("-" * 110)
+    for row in sorted(summary, key=lambda x: (x["audio_set_id"], x["language"] != "all", x["language"], x["noise_level"], x["median_wer_pct"])):
         lat = f"{row['median_latency_per_10s']:>8.2f}" if row["median_latency_per_10s"] is not None else f"{'—':>8}"
-        print(f'{row["model_id"]:<30} {row["language"]:<5} {row["audio_set_id"]:<28} {row["run_count"]:>5} {lat} {row["median_wer_pct"]:>6.1f} {row["median_cer_pct"]:>6.1f}')
+        print(f'{row["model_id"]:<30} {row["language"]:<5} {row["audio_set_id"]:<28} '
+              f'{row["noise_level"] or "—":<9} {row["run_count"]:>5} {lat} '
+              f'{row["median_wer_pct"]:>6.1f} {row["median_cer_pct"]:>6.1f}')
 
     return 0
 
