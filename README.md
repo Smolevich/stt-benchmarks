@@ -18,7 +18,6 @@ See `results/summary.csv` for full ranking; `results/consolidated.json` for raw 
 bench/
   stt_landscape_bench.py     # main bench runner (model registry, multiple runners)
   wer_eval.py                 # WER/CER calculator
-  mix_noise.py                # noisy takes from the clean TTS masters (fixed SNR + seed)
   consolidate_results.py      # merge multiple bench runs into one summary
   plot_ar_vs_nar.py           # generates the AR vs NAR explainer diagram
   plot_stt_landscape.py       # latency × WER scatter plot from CSV
@@ -27,7 +26,6 @@ samples/
   manifest.template.json      # reference text for 20 samples, paths to fill in
   manifest.example.json       # example manifest with edge-tts smoke-test samples
   manifest_synthetic.json     # committed TTS-generated RU + EN synthetic set
-  manifest_synthetic_noise.json # RU + HY masters plus scripted noise levels
   manifest_silero_*.json      # committed independent RU synthetic control sets
 results/
   consolidated.json           # all runs deduplicated, with transcripts
@@ -106,56 +104,6 @@ Every number below is **WER clean** — the two stress samples are excluded from
 7. **The newer model version can be the worse one — check, don't assume (Deepgram).** Finding #1 says upgrade your model version; Deepgram is the counter-example that makes the point sharper: *test it, don't trust the version number.* Nova-3, Deepgram's current flagship, came out **behind** its own predecessor Nova-2 on Russian — 24.0% vs 18.6% WER clean, 5.4 points on identical audio. On English the gap is 20.9% vs 18.5%, which is at the noise floor and should be read as "no gain", not "a loss". Switching Nova-3 to `language=multi` (the mode Deepgram's docs recommend for non-English) buys 2.4 points on RU, to 21.5% — also at the noise floor, so the multilingual mode is not the fix for Russian that the docs imply. Latency is 0.70-0.99 s per 10 s of audio, in the same band as ElevenLabs Scribe and well behind Groq.
 
 8. **One query parameter decides whether Deepgram is competitive on English.** The runner sends `smart_format=true`, Deepgram's recommended production default. Turning it off — same audio, same models, 3 runs, clean subset — moves EN from 17.9% to **14.6%** for Nova-3 multilingual (−3.3 points) and from 18.5% to 15.7% for Nova-2 (−2.8 points). At 14.6% Nova-3 multilingual edges past Fish Audio (15.0%) instead of trailing the whole cloud field. Nova-3 with `language=en` barely moves (20.9% → 20.7%), so the effect is specific to the multilingual and Nova-2 paths. On **Russian the flag changes nothing at all** — on the digits sample the transcript is byte-identical with it on and off. Keeping `smart_format=on` is a defensible default, but it is a real ~3-point tax on the English numbers above, not a rounding artifact.
-
-## Synthetic noise set — turbo vs the full Whisper, and what noise does (Sep 2026)
-
-Separate, **synthetic** audio set `elevenlabs_sarah_noise`: one Russian and one Armenian text,
-spoken by ElevenLabs (voice Sarah), committed as **clean masters**. The noisy takes are produced
-from those masters by [`bench/mix_noise.py`](bench/mix_noise.py) — white noise at a declared SNR,
-plus a narrowband ring tone on two of the three, fixed RNG seed. Noise is a parameter of the
-bench, not a property of a file.
-
-Median WER over 3 runs, per case. `⚠` marks vendor self-bias: ElevenLabs Scribe is listening to
-ElevenLabs' own TTS, so its rows are **not** comparable with the rest of the column.
-
-| Engine | HY clean | HY +8 dB | HY −3 dB | RU clean | RU +8 dB | Latency / 10 s |
-|---|---|---|---|---|---|---|
-| ElevenLabs Scribe v1 ⚠ | 2.4% | 0.0% | 16.7% | 0.0% | 12.3% | 0.6-3.5 s |
-| ElevenLabs Scribe v1 experimental ⚠ | 2.4% | 4.8% | 19.0% | 0.0% | 12.3% | 0.5-4.2 s |
-| **Groq Whisper large-v3 (full)** | **23.8%** | **23.8%** | **38.1%** | 12.3% | 14.0% | 0.23-0.81 s |
-| Groq Whisper large-v3 **turbo** | 31.0% | 35.7% | 47.6% | 14.0% | 14.0% | 0.16-0.30 s |
-| Deepgram Nova-3 (`language=hy` / `ru`) | 47.6% | 45.2% | 57.1% | 12.3% | 12.3% | 0.54-1.13 s |
-| Deepgram Nova-3 (`language=multi`) | 100.0% | 107.1% | 100.0% | 14.0% | 12.3% | 0.57-1.06 s |
-| Deepgram Nova-2 | HTTP 400 | HTTP 400 | HTTP 400 | 12.3% | 12.3% | 1.76-2.61 s |
-| Fish Audio `transcribe-1` | 107.1% | 102.4% | 100.0% | 14.0% | 1.8% | 0.52-0.81 s |
-
-What it says:
-
-1. **On a language outside RU/EN the full `whisper-large-v3` beats `whisper-large-v3-turbo`, and
-   the gap widens with noise**: 23.8% vs 31.0% clean, 23.8% vs 35.7% at +8 dB SNR, 38.1% vs 47.6%
-   at −3 dB. Same provider, same request, one word in the model id. Turbo stays 2-3× faster, so
-   this is a price, not a bug — but on non-English audio the price is 7-12 WER points.
-2. **On Russian the two are within noise of each other** (12.3% vs 14.0% clean, tie under noise),
-   which is why the bot's default has never looked wrong on RU.
-3. **The Russian rows are dominated by a formatting artefact, not by hearing.** The text says
-   "одиннадцать", "две тысячи", "двадцать три"; every engine writes `11`, `2000`, `23`. Semantic
-   WER ([`bench/rescore_semantic.py`](bench/rescore_semantic.py), `--audio-set elevenlabs_sarah_noise`)
-   puts the same rows at 0.0-2.7% — Nova-2 0.0%, Groq full 0.9%, Groq turbo 1.8%, Fish 1.8%,
-   Scribe 2.7%. On Armenian semantic normalization changes nothing (Δ 0.0), so the Armenian
-   numbers above are the model's actual hearing.
-4. **Armenian is a coverage question before it is an accuracy one.** Deepgram Nova-2 rejects
-   `language=hy` with HTTP 400 on every request; Nova-3 `language=multi` and Fish Audio return
-   transliterated Latin/Persian text at ~100% WER. Only Whisper (both sizes), Deepgram Nova-3 with
-   an explicit `hy`, and ElevenLabs Scribe produce Armenian script at all.
-5. **The self-bias row is exactly as suspicious as expected.** Scribe reads its own TTS at 0.0-2.4%
-   WER — below every other engine by an order of magnitude — while on the *live* human set it sits
-   at 11.5-23.1%. Published here, flagged in the data, not to be ranked against the others. It is
-   also not perfectly stable: one of the three identical `scribe_v1` requests on `hy-02-noise` came
-   back as junk (100% WER) while the other two were 0.0%.
-
-Caveats: single voice, one text per language, five cases — this set is a *directional* probe, not
-a ranking. Synthetic numbers are never pooled with the live-voice tables above; they live under
-their own `audio_set_id` and their own noise level in `results/summary.csv`.
 
 ## Reproducing the bench
 
@@ -244,7 +192,7 @@ cp results/consolidated_summary_$TS.csv  results/synthetic_summary.csv
 
 - **Hardware**: Mac mini M4 Pro, 64 GB RAM, no discrete GPU.
 - **Primary audio**: 20 voice memos recorded on iPhone (one speaker, m4a, 48 kHz mono, ~10-25 s each). **This is the most unbiased dataset** — real microphone, natural prosody, genuine speaker habits. Live voice numbers are the primary ranking signal.
-- **Synthetic audio**: secondary TTS-generated control sets (`elevenlabs_rachel_mixed` via ElevenLabs Rachel, Silero RU voices, and `elevenlabs_sarah_noise` — RU + HY masters with scripted noise levels from `bench/mix_noise.py`). Added for reproducibility (live audio is not committed — it's personal voice / PII) and to illustrate how TTS-generated audio can shift model rankings due to clean audio characteristics and potential vendor self-bias. **Do not treat synthetic results as the final benchmark.** See [docs/methodology.md](docs/methodology.md) for a detailed explanation.
+- **Synthetic audio**: secondary TTS-generated control sets (`elevenlabs_rachel_mixed` via ElevenLabs Rachel, and Silero RU voices). Added for reproducibility (live audio is not committed — it's personal voice / PII) and to illustrate how TTS-generated audio can shift model rankings due to clean audio characteristics and potential vendor self-bias. **Do not treat synthetic results as the final benchmark.** See [docs/methodology.md](docs/methodology.md) for a detailed explanation.
 - **Scenarios**: clean room, fast speech, whisper, street noise, numbers spoken as words, proper names/identifiers, code-switching RU↔EN, podcast pace, short commands, long sentence with subordinate clauses.
 - **Metric**: WER and CER via Levenshtein distance on lowercased, punctuation-stripped text. No advanced normalization (numerals vs words, etc.) — see "Limitations".
 - **Reps**: 1 warmup + 3 measured runs per (model, sample), report medians.
