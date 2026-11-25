@@ -279,6 +279,15 @@ MODEL_REGISTRY: dict[str, ModelSpec] = {
         disk_hint="~290 MB",
         notes="T-Bank / T-Tech streaming Conformer-CTC. Install: pip install git+https://github.com/voicekit-team/T-one.git",
     ),
+    "oruk-fourier-2b-mlx": ModelSpec(
+        id="oruk-fourier-2b-mlx",
+        runner="mlx_audio_qwen3",
+        model="oruk/oruk-fourier-2b",
+        arch="AR",
+        languages="EN",
+        disk_hint="~2.3 GB",
+        notes="Oruk Fourier 2B (CC BY-NC 4.0), English-specialized Qwen3-ASR 1.7B MLX 8-bit via mlx-audio.",
+    ),
 }
 
 
@@ -557,6 +566,33 @@ def build_runner(spec: ModelSpec) -> Callable[[str, str], str]:
             if isinstance(result, list):
                 return " ".join(getattr(seg, "text", str(seg)) for seg in result).strip()
             return str(result).strip()
+
+        return transcribe
+
+    if spec.runner == "mlx_audio_qwen3":
+        try:
+            from huggingface_hub import snapshot_download
+            from mlx_audio.stt.utils import load_model
+        except ImportError as exc:
+            raise RuntimeError(
+                "Install mlx-audio and huggingface_hub first: pip install mlx-audio huggingface_hub"
+            ) from exc
+
+        snap = Path(
+            snapshot_download(
+                spec.model,
+                allow_patterns=["config.json", "mlx/8bit/*"],
+            )
+        )
+        model_dir = snap / "mlx" / "8bit"
+        model = load_model(str(model_dir if model_dir.exists() else snap), model_type="qwen3_asr")
+
+        def transcribe(path: str, language: str) -> str:
+            lang = (spec.language_override or language or "en").lower()
+            if lang not in {"en", "en-us", "en-gb", "english", "auto"}:
+                raise ValueError(f"{spec.id} is English-only (skipped language={language!r})")
+            result = model.generate(path, language="English", verbose=False)
+            return str(getattr(result, "text", result) or "").strip()
 
         return transcribe
 
